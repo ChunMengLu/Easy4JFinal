@@ -17,6 +17,13 @@
     <description>Easy4JFinal-core is to use Java Web Framework JFinal.</description>
     <url>http://www.dreamlu.net/</url>
 
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>http://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
     <developers>
         <developer>
             <name>ChunmengLu</name>
