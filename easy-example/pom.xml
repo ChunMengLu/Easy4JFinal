@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.dreamlu.easy</groupId>
+    <version>1.0-SNAPSHOT</version>
+    <artifactId>easy-example</artifactId>
+    <packaging>war</packaging>
+
+    <properties>
+        <logback.version>1.1.3</logback.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.dreamlu.easy</groupId>
+            <artifactId>easy-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jfinal</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>8.1.8</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>easy-module</finalName>
+        <plugins>
+            <!-- Idea 添加此插件以便启动jetty -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>9.3.10.v20160621</version>
+                <configuration>
+                    <stopPort>9966</stopPort>
+                    <stopKey>stop</stopKey>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <webApp>
+                        <contextPath>/</contextPath>
+                    </webApp>
+                    <!-- 适应测试阶段的jetty，日志写入目录，tomcat写入tomcat/logs下 -->
+                    <systemProperties>
+                        <systemProperty>
+                            <name>catalina.base</name>
+                            <value>.</value>
+                        </systemProperty>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

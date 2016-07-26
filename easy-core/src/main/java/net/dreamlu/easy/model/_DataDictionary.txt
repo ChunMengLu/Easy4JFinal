@@ -1,0 +1,32 @@
+Table: t_options
+----------+--------------+------+-----+---------+---------
+ Field    | Type         | Null | Key | Default | Remarks 
+----------+--------------+------+-----+---------+---------
+ optionId | INT(10)      | NO   | PRI |         |         
+ key      | VARCHAR(64)  | NO   |     |         | 键       
+ value    | VARCHAR(128) | YES  |     |         | 值       
+----------+--------------+------+-----+---------+---------
+
+Table: t_user
+------------+---------------+------+-----+---------+---------
+ Field      | Type          | Null | Key | Default | Remarks 
+------------+---------------+------+-----+---------+---------
+ userId     | INT(10)       | NO   | PRI |         | 主键      
+ name       | VARCHAR(32)   | NO   |     |         | 用户名/11111
+ email      | VARCHAR(64)   | YES  |     |         | email   
+ phone      | VARCHAR(11)   | YES  |     |         | 手机号     
+ pwd        | VARCHAR(32)   | NO   |     |         | 密码      
+ realName   | VARCHAR(32)   | YES  |     |         | 真实姓名    
+ type       | INT(10)       | YES  |     | 2       | 类型//select/1,管理员,2,普通用户,3,前台用户
+ address    | VARCHAR(64)   | YES  |     |         | 地址      
+ gravatar   | VARCHAR(200)  | YES  |     |         | 头像地址    
+ score      | INT(10)       | NO   |     |         | 积分      
+ signature  | VARCHAR(1000) | YES  |     |         | 个性签名    
+ url        | VARCHAR(255)  | YES  |     |         | 个人主页    
+ remark     | VARCHAR(1000) | YES  |     |         | 说明      
+ theme      | VARCHAR(64)   | YES  |     | default | 主题      
+ enable     | BIT           | YES  |     | 10      | 是否启用    
+ createTime | DATETIME(19)  | YES  |     |         | 创建时间    
+ loginTime  | DATETIME(19)  | YES  |     |         | 最后登录时间  
+------------+---------------+------+-----+---------+---------
+

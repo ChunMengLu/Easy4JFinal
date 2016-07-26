@@ -2,4 +2,4 @@
 
 ## License
 
-( The MIT License )# Easy4JFinal
+( The MIT License )
