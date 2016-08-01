@@ -44,11 +44,6 @@
             <version>${jfinal.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.jfinal</groupId>
-            <artifactId>cos</artifactId>
-            <version>26Dec2008</version>
-        </dependency>
-        <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
             <version>${beetl.version}</version>
