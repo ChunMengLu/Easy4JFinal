@@ -1,14 +1,27 @@
 package net.dreamlu.easy.config;
 
+import java.util.Date;
+
+import javax.servlet.ServletContext;
+
+import org.beetl.ext.jfinal.BeetlRenderFactory;
+
 import com.alibaba.druid.filter.logging.Slf4jLogFilter;
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.wall.WallFilter;
-import com.jfinal.config.*;
+import com.jfinal.config.Constants;
+import com.jfinal.config.Handlers;
+import com.jfinal.config.Interceptors;
+import com.jfinal.config.JFinalConfig;
+import com.jfinal.config.Plugins;
+import com.jfinal.config.Routes;
+import com.jfinal.core.JFinal;
 import com.jfinal.ext.handler.UrlSkipHandler;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.druid.DruidStatViewHandler;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
+
 import net.dreamlu.controller.UeditorApiController;
 import net.dreamlu.easy.commons.interceptors.JsonExceptionInterceptor;
 import net.dreamlu.easy.commons.logs.LogPrintStream;
@@ -22,11 +35,6 @@ import net.dreamlu.easy.handler.SessionIdHandler;
 import net.dreamlu.easy.handler.ViewDevHandler;
 import net.dreamlu.easy.model._MappingKit;
 import net.dreamlu.easy.ui.beetl.SqlsTag;
-import org.beetl.ext.jfinal.BeetlRenderFactory;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by L.cm on 2016/5/18.
@@ -35,6 +43,7 @@ public abstract class EasyConfig extends JFinalConfig {
     // 开发模式
     private boolean devMode = false;
 
+    
     @Override
     public void configConstant(Constants me) {
         loadPropertyFile("application.properties");
@@ -119,10 +128,12 @@ public abstract class EasyConfig extends JFinalConfig {
         WebUtils.setUserKey(userKey);
         WebUtils.setUserSecret(userSecret);
 
-        // 在JFinal启动时，beetl变量中加入启动时间 ${startTime!, "yyyy-MM-dd HH:mm:ss"}
-        Map<String, Object> sharedVars = new HashMap<String, Object>();
-        sharedVars.put("startTime", new Date());
-        BeetlRenderFactory.groupTemplate.setSharedVars(sharedVars);
+        // 在JFinal启动时，加入启动时间 ${startTime}
+        JFinal jfinal = JFinal.me();
+        ServletContext servletContext = jfinal.getServletContext();
+        servletContext.setAttribute("startTime", new Date());
+        servletContext.setAttribute("ctxPath", jfinal.getContextPath());
+
         // 注入sqls tag
         BeetlRenderFactory.groupTemplate.registerTag("sqls", SqlsTag.class);
 

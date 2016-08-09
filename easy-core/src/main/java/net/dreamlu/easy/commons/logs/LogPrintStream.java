@@ -1,9 +1,9 @@
 package net.dreamlu.easy.commons.logs;
 
-import com.jfinal.log.Log;
-
-import java.io.*;
+import java.io.PrintStream;
 import java.util.Locale;
+
+import com.jfinal.log.Log;
 
 /**
  * Created by L.cm on 2016/7/13.
@@ -14,7 +14,7 @@ public class LogPrintStream extends PrintStream {
     private final boolean error;
 
     public LogPrintStream(boolean error) {
-        super(System.out);
+        super(error ? System.err : System.out);
         this.error = error;
     }
 

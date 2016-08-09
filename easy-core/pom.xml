@@ -47,6 +47,13 @@
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
             <version>${beetl.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jsp</artifactId>
+            <version>8.1.8.v20121106</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -87,6 +94,12 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resource/tags</directory>
+                <targetPath>META-INF</targetPath>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

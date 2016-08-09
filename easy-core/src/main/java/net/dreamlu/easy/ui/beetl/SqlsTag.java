@@ -12,12 +12,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 设计一个和 Sqls.get(sqlKey); 一起用的页面标签，提高工作效率。
- *
- * <#sqls key="xxx" paras="1;2;3" limit="5" cacheName="blog"; x>
- *     ${x.id}, ${x.title} <br/>
- * </#sqls>
- *
+ * 设计一个和 Sqls.get(key); 一起用的页面标签，提高工作效率。
+ * <pre>
+ * &lt;#sqls key=&quot;xxx&quot; paras=&quot;1;2;3&quot; limit=&quot;5&quot; cacheName=&quot;blog&quot;; x&gt;
+ *     ${x.id}, ${x.title} &lt;br/&gt;
+ * &lt;/#sqls&gt;
+ * </pre>
+ * @author L.cm
  */
 public class SqlsTag extends GeneralVarTagBinding {
 

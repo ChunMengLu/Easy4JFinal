@@ -1,17 +1,18 @@
 package net.dreamlu.easy.commons.base;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jfinal.core.Controller;
 import com.jfinal.kit.StrKit;
 import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.render.JsonRender;
+
 import net.dreamlu.easy.commons.result.DataTables;
 import net.dreamlu.easy.commons.utils.WebUtils;
 import net.dreamlu.easy.model.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by L.cm on 2016/5/18.
@@ -68,7 +69,7 @@ public class EasyController extends Controller {
      * @return 集合
      */
     public <T> List<T> getModels(Class<T> modelClass, String modelName, int size) {
-        List<T> list = new ArrayList();
+        List<T> list = new ArrayList<T>();
         for (int i = 0; i < size; i ++) {
             T m = getModel(modelClass, modelName + "[" + i + "]");
             if (m != null) {
