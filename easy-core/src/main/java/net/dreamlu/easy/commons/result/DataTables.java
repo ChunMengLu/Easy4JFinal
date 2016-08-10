@@ -1,11 +1,16 @@
 package net.dreamlu.easy.commons.result;
 
-import com.jfinal.plugin.activerecord.Page;
-
 import java.io.Serializable;
 import java.util.List;
 
+import com.jfinal.plugin.activerecord.Page;
+
+/**
+ * DataTables 表格渲染封装
+ * @author L.cm
+ */
 public class DataTables<T> implements Serializable {
+	private static final long serialVersionUID = 2107946118716552594L;
 
 	private long draw;
 	private long recordsTotal;

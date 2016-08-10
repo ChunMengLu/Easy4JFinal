@@ -36,7 +36,7 @@ public final class WebUtils {
 	/**
 	 * 设置用户账户cookie name
 	 * @param userKey
-     */
+	 */
 	public static void setUserKey(String userKey) {
 		if (StrKit.isBlank(userKey)) {
 			return;
@@ -47,7 +47,7 @@ public final class WebUtils {
 	/**
 	 * 设置用户账户cookie 密钥
 	 * @param userSecret
-     */
+	 */
 	public static void setUserSecret(String userSecret) {
 		if (StrKit.isBlank(userSecret)) {
 			return;

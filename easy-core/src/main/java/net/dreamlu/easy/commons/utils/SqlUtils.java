@@ -15,7 +15,7 @@ public class SqlUtils {
 	public static String sqlHolder(int size) {
 		String[] paras = new String[size];
 		Arrays.fill(paras, "?");
-		return StringUtils.join(paras, ",");
+		return StrUtils.join(paras, ",");
 	}
 
 }

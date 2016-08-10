@@ -24,7 +24,7 @@ public class JsonExceptionInterceptor implements Interceptor{
 				Record record = new Record();
 				record.set("success", false);
 				record.set("msg", e.getMessage());
-				controller.renderJson(record);
+				controller.render(new JsonRender(record).forIE());
 			} else {
 				// 上层errorView进行处理
 				throw new RuntimeException(e);
