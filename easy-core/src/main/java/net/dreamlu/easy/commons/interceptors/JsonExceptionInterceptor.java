@@ -7,6 +7,8 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.render.JsonRender;
 import com.jfinal.render.Render;
 
+import net.dreamlu.easy.commons.utils.Exceptions;
+
 /**
  * 对json系统异常时的统一处理
  */
@@ -18,7 +20,7 @@ public class JsonExceptionInterceptor implements Interceptor{
 		Render render = controller.getRender();
 		try {
 			inv.invoke();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (render instanceof JsonRender) {
 				// json数据异常时返回
 				Record record = new Record();
@@ -27,7 +29,7 @@ public class JsonExceptionInterceptor implements Interceptor{
 				controller.render(new JsonRender(record).forIE());
 			} else {
 				// 上层errorView进行处理
-				throw new RuntimeException(e);
+				throw Exceptions.unchecked(e);
 			}
 		}
 	}

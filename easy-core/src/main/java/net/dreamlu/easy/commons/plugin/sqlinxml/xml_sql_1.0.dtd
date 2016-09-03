@@ -1,0 +1,10 @@
+<!ELEMENT mapper (sql*)>
+<!ATTLIST mapper
+  namespace CDATA #REQUIRED
+>
+<!ATTLIST sql
+  id CDATA #REQUIRED
+>
+<!ELEMENT sql (select?, ext?)>
+<!ELEMENT select (#PCDATA)>
+<!ELEMENT ext (#PCDATA)>

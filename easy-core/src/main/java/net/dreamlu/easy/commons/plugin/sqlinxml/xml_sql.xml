@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//dreamlu.net//DTD Mapper 1.0//ZH" "http://blog.dreamlu.net/dtd/jfinal/xml_sql_1.0.dtd">
+<mapper namespace="net.dreamlu.model.UserModel">
+	<sql id="findByName">
+		<select>
+			select *
+		</select>
+		<ext>
+			from user where name = ?
+		</ext>
+	</sql>
+	<sql id="findByAge">
+		select * from user where age = ?
+	</sql>
+</mapper>
+
+<!--
+使用方法：
+namespace#Id
+namespace#Id@select
+namespace#Id@ext
+
+如示例：
+net.dreamlu.model.UserModel#findByAge
+net.dreamlu.model.UserModel#findByName@select
+net.dreamlu.model.UserModel#findByName@ext
+-->
+
+<mapper namespace="net.dreamlu.model.UserModel">
+	<sqlSelect id="findByName">
+		select *
+	</sqlSelect>
+	<sqlExt id="findByName">
+		from user where name = ?
+	</sqlExt>
+	<sql id="findByAge">
+		select * from user where age = ?
+	</sql>
+</mapper>

@@ -1,4 +1,4 @@
-package net.dreamlu.easy.config;
+package net.dreamlu.easy.commons.config;
 
 import java.util.Date;
 
@@ -27,6 +27,7 @@ import net.dreamlu.easy.commons.interceptors.JsonExceptionInterceptor;
 import net.dreamlu.easy.commons.logs.LogPrintStream;
 import net.dreamlu.easy.commons.logs.Slf4jLogFactory;
 import net.dreamlu.easy.commons.servlet.ServletContextInterceptor;
+import net.dreamlu.easy.commons.session.SessionHandler;
 import net.dreamlu.easy.commons.utils.WebUtils;
 import net.dreamlu.easy.core.CaptchaController;
 import net.dreamlu.easy.core.auth.AuthController;
@@ -43,7 +44,6 @@ public abstract class EasyConfig extends JFinalConfig {
     // 开发模式
     private boolean devMode = false;
 
-    
     @Override
     public void configConstant(Constants me) {
         loadPropertyFile("application.properties");
@@ -54,8 +54,7 @@ public abstract class EasyConfig extends JFinalConfig {
         // 设置Slf4日志
         me.setLogFactory(new Slf4jLogFactory());
         // beetl模版配置工厂
-        BeetlRenderFactory beetlRenderFactory = new BeetlRenderFactory();
-        me.setMainRenderFactory(beetlRenderFactory);
+        me.setMainRenderFactory(new BeetlRenderFactory());
         // 加载用户自己的配置
         this.constant(me);
     }
@@ -81,6 +80,7 @@ public abstract class EasyConfig extends JFinalConfig {
         me.add(new UrlSkipHandler("/static", false));
         me.add(new DruidStatViewHandler("/admin/druid"));
         me.add(new SessionIdHandler());
+        me.add(new SessionHandler());
     }
 
     @Override
@@ -122,6 +122,9 @@ public abstract class EasyConfig extends JFinalConfig {
     @Override
     public void afterJFinalStart() {
         super.afterJFinalStart();
+        // ehCache session 管理
+        EhcacheSessionConfig.init();
+        
         // 用户登陆是使用的cookie name和密钥
         String userKey    = getProperty("app.user.key");
         String userSecret = getProperty("app.user.secret");
@@ -132,7 +135,11 @@ public abstract class EasyConfig extends JFinalConfig {
         JFinal jfinal = JFinal.me();
         ServletContext servletContext = jfinal.getServletContext();
         servletContext.setAttribute("startTime", new Date());
-        servletContext.setAttribute("ctxPath", jfinal.getContextPath());
+        // ctxPath
+        String ctxPath = jfinal.getContextPath();
+        servletContext.setAttribute("ctxPath", ctxPath);
+        // 静态文件目录
+        servletContext.setAttribute("stcPath", ctxPath + "/static");
 
         // 注入sqls tag
         BeetlRenderFactory.groupTemplate.registerTag("sqls", SqlsTag.class);
@@ -152,4 +159,5 @@ public abstract class EasyConfig extends JFinalConfig {
     public abstract void mapping(ActiveRecordPlugin arp);
     public abstract void plugin(Plugins plugins);
     public abstract void onEasyStart();
+
 }

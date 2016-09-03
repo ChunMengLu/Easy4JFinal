@@ -1,11 +1,11 @@
 package net.dreamlu.easy.commons.utils;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -15,12 +15,13 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Created by L.cm on 2016/5/9.
@@ -189,10 +190,10 @@ public class XmlHelper {
         NodeList list = root.getChildNodes();
         for (int i = 0; i < list.getLength(); i++) {
             Node node = list.item(i);
-            params.put(node.getNodeName(), node.getTextContent());
+            if (node instanceof Element) {
+                params.put(node.getNodeName(), node.getTextContent());
+            }
         }
-        // 含有空白符会生成一个#text参数
-        params.remove("#text");
         return params;
     }
 

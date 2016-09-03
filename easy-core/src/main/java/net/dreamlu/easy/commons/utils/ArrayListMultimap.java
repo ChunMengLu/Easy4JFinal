@@ -13,7 +13,6 @@ import java.util.Map;
  * date 2015年6月25日下午8:36:17
  */
 public class ArrayListMultimap<K, V> {
-
 	private transient final Map<K, List<V>> map;
 
 	public ArrayListMultimap() {

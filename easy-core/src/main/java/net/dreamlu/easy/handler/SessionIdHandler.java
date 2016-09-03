@@ -14,15 +14,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SessionIdHandler extends Handler {
 
-	@Override
-	public void handle(String target, HttpServletRequest request,
-					   HttpServletResponse response, boolean[] isHandled) {
-		// L.cm update by 2014-08-06 更精准的判断
-		boolean isFromURL = request.isRequestedSessionIdFromURL();
-		if (isFromURL) {
-			target = target.substring(0, target.indexOf(';'));
-		}
-		next.handle(target, request, response, isHandled);
-	}
+    @Override
+    public void handle(String target, HttpServletRequest request, 
+            HttpServletResponse response, boolean[] isHandled) {
+        // L.cm update by 2014-08-06 更精准的判断
+        boolean isFromURL = request.isRequestedSessionIdFromURL();
+        if (isFromURL) {
+            target = target.substring(0, target.indexOf(';'));
+        }
+        next.handle(target, request, response, isHandled);
+    }
 
 }
