@@ -64,7 +64,6 @@ public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
         if (create) {
             return this.getSession();
         }
-        
         String sessionId = getRequestedSessionId();
         if (null == sessionId) {
             return null;

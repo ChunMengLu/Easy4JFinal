@@ -7,7 +7,10 @@
 	
 	本Demo采用Beetl 作为视图文件，您还可以使用FreeMarker、Jsp、Velocity或自定义类型视图。
 	点击<a href="${ctxPath}/blog"><b>此处</b></a>开始试用Demo。
-	
+	<form action="${ctxPath}/blog/upload" enctype="multipart/form-data" method="post">
+	<input type="file" name="img">
+	<input type="submit">
+	</form>
 	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 </div>

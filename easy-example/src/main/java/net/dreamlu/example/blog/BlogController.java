@@ -2,6 +2,8 @@ package net.dreamlu.example.blog;
 
 
 import com.jfinal.aop.Before;
+import com.jfinal.upload.UploadFile;
+
 import net.dreamlu.easy.commons.base.EasyController;
 import net.dreamlu.example.model.Blog;
 
@@ -27,6 +29,13 @@ public class BlogController extends EasyController {
 	
 	public void edit() {
 		setAttr("blog", Blog.dao.findById(getParaToInt()));
+	}
+	
+	public void upload() {
+	    UploadFile file = getFile("img");
+	    getSessionAttr("hhh");
+	    String fileName = file.getFileName();
+	    renderText(fileName);
 	}
 	
 	@Before(BlogValidator.class)
