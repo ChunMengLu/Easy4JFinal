@@ -56,13 +56,13 @@ public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
         }
         // 由于sessionManager不参与序列化，加上序列化的问题，故手动设置
         session.setManager(sessionManager);
-        return sessionManager.get(sessionId);
+        return session;
     }
 
     @Override
     public HttpSession getSession(boolean create) {
         if (create) {
-            return getSession();
+            return this.getSession();
         }
         
         String sessionId = getRequestedSessionId();
