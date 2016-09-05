@@ -15,7 +15,7 @@ public class SessionHandler extends Handler {
     public void handle(String target, HttpServletRequest request, 
             HttpServletResponse response, boolean[] isHandled) {
         
-        request = new SessionRepositoryRequestWrapper(request);
+        request = new SessionRepositoryRequestWrapper(request, response);
         next.handle(target, request, response, isHandled);
     }
 

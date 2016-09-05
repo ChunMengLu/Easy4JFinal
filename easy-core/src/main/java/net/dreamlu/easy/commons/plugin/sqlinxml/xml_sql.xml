@@ -9,9 +9,11 @@
 			from user where name = ?
 		</ext>
 	</sql>
+	<!-- 
 	<sql id="findByAge">
 		select * from user where age = ?
 	</sql>
+	 -->
 </mapper>
 
 <!--
@@ -25,7 +27,7 @@ net.dreamlu.model.UserModel#findByAge
 net.dreamlu.model.UserModel#findByName@select
 net.dreamlu.model.UserModel#findByName@ext
 -->
-
+<!-- 
 <mapper namespace="net.dreamlu.model.UserModel">
 	<sqlSelect id="findByName">
 		select *
@@ -37,3 +39,4 @@ net.dreamlu.model.UserModel#findByName@ext
 		select * from user where age = ?
 	</sql>
 </mapper>
+ -->

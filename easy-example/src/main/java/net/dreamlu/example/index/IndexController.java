@@ -7,6 +7,9 @@ import net.dreamlu.easy.commons.base.EasyController;
  */
 public class IndexController extends EasyController {
 	public void index() {
+	    setSessionAttr("hhh", "xxxx");
+	    
+	    getSessionAttr("hhh");
 		render("index.html");
 	}
 }

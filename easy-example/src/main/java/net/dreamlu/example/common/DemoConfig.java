@@ -5,7 +5,9 @@ import com.jfinal.config.Constants;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
-import net.dreamlu.easy.config.EasyConfig;
+import com.jfinal.plugin.redis.RedisPlugin;
+
+import net.dreamlu.easy.commons.config.EasyConfig;
 import net.dreamlu.example.blog.BlogController;
 import net.dreamlu.example.index.IndexController;
 import net.dreamlu.example.model._MappingKit;
@@ -33,7 +35,7 @@ public class DemoConfig extends EasyConfig {
 
 	@Override
 	public void plugin(Plugins plugins) {
-		
+	    plugins.add(new RedisPlugin("main", "127.0.0.1"));
 	}
 
 	@Override

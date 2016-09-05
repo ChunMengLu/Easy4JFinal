@@ -1,15 +1,6 @@
 <ehcache updateCheck="false" dynamicConfig="false">
 	<diskStore path="java.io.tmpdir"/>
 
-	<!-- 模拟session，用于用户状态，缓存10分钟 -->
-	<cache name="session"
-		maxElementsInMemory="2000"
-		eternal="false"
-		timeToIdleSeconds="600"
-		timeToLiveSeconds="600"
-		overflowToDisk="false"
-	/>
-
 	<!--
 		name:缓存名称。
 		maxElementsInMemory：缓存最大个数。

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.jfinal.kit.StrKit;
@@ -14,8 +15,10 @@ import net.dreamlu.easy.commons.utils.WebUtils;
 public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
     private static SessionManager sessionManager = EasyConstants.getSessionManager();
     
-    public SessionRepositoryRequestWrapper(HttpServletRequest request) {
+    private final HttpServletResponse response;
+    public SessionRepositoryRequestWrapper(HttpServletRequest request, HttpServletResponse response) {
         super(request);
+        this.response = response;
     }
     
     private HttpServletRequest getHttpRequest() {
@@ -33,33 +36,50 @@ public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
      */
     @Override
     public String getRequestedSessionId() {
-        String sessionId = getSessionId();
-        if (StrKit.isBlank(sessionId)) {
-            sessionId = UUID.randomUUID().toString();
-        }
-        return sessionId;
+        return getSessionId();
     }
 
     @Override
     public HttpSession getSession() {
         String sessionId = getRequestedSessionId();
+        // 默认getSession(true)
+        if (null == sessionId) {
+            String appUserKey = EasyConstants.me.getAppUserKey();
+            int maxAgeInSeconds = EasyConstants.me.getSessionTimeout() * 60;
+            sessionId = UUID.randomUUID().toString();
+            WebUtils.setCookie(response, appUserKey, sessionId, maxAgeInSeconds);
+        }
+        EasySession session = sessionManager.get(sessionId);
+        if (null == session) {
+            session = new EasySession(sessionId);
+            sessionManager.save(session);
+        }
+        // 由于sessionManager不参与序列化，加上序列化的问题，故手动设置
+        session.setManager(sessionManager);
         return sessionManager.get(sessionId);
     }
 
     @Override
     public HttpSession getSession(boolean create) {
+        if (create) {
+            return getSession();
+        }
+        
         String sessionId = getRequestedSessionId();
-        HttpSession session = sessionManager.get(sessionId);
-        if (null == session && create) {
-            session = new EasySession(sessionId);
-            sessionManager.put(sessionId, session);
+        if (null == sessionId) {
+            return null;
+        }
+        EasySession session = sessionManager.get(sessionId);
+        if (null != session) {
+            // 由于sessionManager不参与序列化，加上序列化的问题，故手动设置
+            session.setManager(sessionManager);
         }
         return session;
     }
 
     @Override
     public boolean isRequestedSessionIdValid() {
-        String sessionId = getSessionId();
+        String sessionId = getRequestedSessionId();
         return StrKit.notBlank(sessionId);
     }
 

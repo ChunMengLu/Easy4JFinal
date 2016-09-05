@@ -29,6 +29,7 @@ class EasySession implements HttpSession, Serializable {
     protected final long creationTime = System.currentTimeMillis();
     protected volatile int maxInactiveInterval = -1;
     protected volatile boolean isNew = false;
+    protected transient SessionManager manager;
     
     public EasySession(String id) {
         this.id = id;
@@ -92,6 +93,7 @@ class EasySession implements HttpSession, Serializable {
 
     public void removeAttribute(String key) {
         attributes.remove(key);
+        manager.update(this);
     }
 
     @Deprecated
@@ -108,6 +110,7 @@ class EasySession implements HttpSession, Serializable {
             return;
         }
         attributes.put(key, value);
+        manager.update(this);
     }
 
     @Override
@@ -115,4 +118,7 @@ class EasySession implements HttpSession, Serializable {
         this.maxInactiveInterval = interval;
     }
 
+    public void setManager(SessionManager manager) {
+        this.manager = manager;
+    }
 }
