@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletInputStream;
+import javax.servlet.http.HttpServletRequest;
+
+import com.oreilly.servlet.exception.LimitedException;
 
 /** 
  * A utility class to handle <code>multipart/form-data</code> requests,
@@ -171,7 +173,7 @@ public class MultipartParser {
     // Check the content length to prevent denial of service attacks
     int length = req.getContentLength();
     if (length > maxSize) {
-      throw new IOException("Posted content length of " + length + 
+      throw new LimitedException("Posted content length of " + length + 
                             " exceeds limit of " + maxSize);
     }
 
@@ -248,7 +250,7 @@ public class MultipartParser {
     // Content-Disposition: form-data; name="field1"; filename="file1.txt"
     // Content-Type: type/subtype
     // Content-Transfer-Encoding: binary
-    Vector headers = new Vector();
+    Vector<String> headers = new Vector<String>();
 
     String line = readLine();
     if (line == null) {
@@ -294,9 +296,9 @@ public class MultipartParser {
     String origname = null;
     String contentType = "text/plain";  // rfc1867 says this is the default
 
-    Enumeration enu = headers.elements();
+    Enumeration<String> enu = headers.elements();
     while (enu.hasMoreElements()) {
-      String headerline = (String) enu.nextElement();
+      String headerline = enu.nextElement();
       if (headerline.toLowerCase().startsWith("content-disposition:")) {
         // Parse the content-disposition line
         String[] dispInfo = extractDispositionInfo(headerline);
@@ -460,7 +462,6 @@ public class MultipartParser {
   private String readLine() throws IOException {
     StringBuffer sbuf = new StringBuffer();
     int result;
-    String line;
 
     do {
       result = in.readLine(buf, 0, buf.length);  // does +=

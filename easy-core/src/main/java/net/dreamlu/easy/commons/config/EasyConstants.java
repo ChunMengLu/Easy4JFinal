@@ -1,7 +1,7 @@
 package net.dreamlu.easy.commons.config;
 
 import net.dreamlu.easy.commons.core.EasyConst;
-import net.dreamlu.easy.commons.session.RedisSessionManager;
+import net.dreamlu.easy.commons.session.EhcacheSessionManager;
 import net.dreamlu.easy.commons.session.SessionManager;
 
 /**
@@ -19,7 +19,7 @@ public final class EasyConstants {
     private String sessionCookieName   = EasyConst.SESSION_COOKIE_NAME;
     private String sessionCookieDomain = null;
     
-    private static SessionManager sessionManager = new RedisSessionManager();
+    private static SessionManager sessionManager = new EhcacheSessionManager();
     
     private EasyConstants() {}
     
