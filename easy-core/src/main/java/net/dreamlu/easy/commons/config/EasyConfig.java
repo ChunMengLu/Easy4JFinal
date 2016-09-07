@@ -25,7 +25,6 @@ import com.jfinal.plugin.ehcache.EhCachePlugin;
 import net.dreamlu.controller.UeditorApiController;
 import net.dreamlu.easy.commons.interceptors.JsonExceptionInterceptor;
 import net.dreamlu.easy.commons.logs.LogPrintStream;
-import net.dreamlu.easy.commons.logs.Slf4jLogFactory;
 import net.dreamlu.easy.commons.servlet.ServletContextInterceptor;
 import net.dreamlu.easy.commons.session.SessionHandler;
 import net.dreamlu.easy.commons.utils.WebUtils;
@@ -48,15 +47,9 @@ public abstract class EasyConfig extends JFinalConfig {
     public void configConstant(Constants me) {
         loadPropertyFile("application.properties");
         devMode = getPropertyToBoolean("app.devMode", false);
-        me.setEncoding(getProperty("app.encoding", "UTF-8"));
-
+        
         me.setDevMode(devMode);
-        // 设置Slf4日志
-        me.setLogFactory(new Slf4jLogFactory());
-        // beetl模版配置工厂
-        me.setMainRenderFactory(new BeetlRenderFactory());
-        // 加载用户自己的配置
-        this.constant(me);
+        ConfigParser.parser(prop, me);
     }
 
     @Override
