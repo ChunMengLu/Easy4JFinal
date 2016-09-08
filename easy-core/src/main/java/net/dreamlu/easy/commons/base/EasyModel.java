@@ -4,7 +4,9 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Table;
 import com.jfinal.plugin.activerecord.TableMapping;
 
+import net.dreamlu.easy.commons.parsing.GenericTokenParser;
 import net.dreamlu.easy.commons.plugin.sqlinxml.SqlKit;
+import net.dreamlu.easy.commons.plugin.sqlinxml.SqlVarHandler;
 
 /**
  * Created by L.cm on 2016/7/5.
@@ -137,7 +139,7 @@ public class EasyModel<M extends EasyModel> extends Model<M> {
      * 删除之后
      */
     protected void onDeleteAfter(){}
-
+    
     /**
      * 获取sql
      * @param sqlKey sqlKey
@@ -145,9 +147,16 @@ public class EasyModel<M extends EasyModel> extends Model<M> {
      */
     protected String getSql(String sqlKey) {
         String clazz = this.getUsefulClass().getName();
-        return SqlKit.get(clazz.concat(sqlKey));
+        
+        // 获取sql
+        String sqlStr = SqlKit.get(clazz.concat(sqlKey));
+        
+        // Sql参数处理器，put比较重要的参数进去
+        put("table", getTableName());
+        GenericTokenParser sqlParser = new GenericTokenParser(new SqlVarHandler(this));
+        return sqlParser.parse(sqlStr);
     }
-
+    
     /**
      * 获取sql select
      * @param sqlKey sqlKey
@@ -156,7 +165,7 @@ public class EasyModel<M extends EasyModel> extends Model<M> {
     protected String getSelect(String sqlKey) {
         return this.getSql(sqlKey.concat("@select"));
     }
-
+    
     /**
      * 获取sql ext
      * @param sqlKey sqlKey

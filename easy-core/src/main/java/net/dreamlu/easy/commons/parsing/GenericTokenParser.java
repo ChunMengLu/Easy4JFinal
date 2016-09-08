@@ -16,14 +16,33 @@
 package net.dreamlu.easy.commons.parsing;
 
 /**
+ * 通用字符串处理
+ * 
+ * 源码来自mybatis
+ * 
  * @author Clinton Begin
  */
 public class GenericTokenParser {
-
     private final String openToken;
     private final String closeToken;
     private final TokenHandler handler;
 
+    /**
+     * 默认使用 ${} 构造
+     * @param handler 处理器
+     */
+    public GenericTokenParser(TokenHandler handler) {
+        this.openToken  = "${";
+        this.closeToken = "}";
+        this.handler = handler;
+    }
+
+    /**
+     * 字符串变量解析器
+     * @param openToken 起始字符
+     * @param closeToken 结束字符
+     * @param handler 处理器
+     */
     public GenericTokenParser(String openToken, String closeToken, TokenHandler handler) {
         this.openToken = openToken;
         this.closeToken = closeToken;
