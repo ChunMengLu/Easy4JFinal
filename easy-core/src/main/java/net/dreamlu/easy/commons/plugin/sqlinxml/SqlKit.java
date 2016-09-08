@@ -28,7 +28,7 @@ public class SqlKit {
      * @return sql
      */
     public static String getSelect(String sqlKey) {
-        return sqlMap.get(sqlKey + "@select");
+        return SqlKit.get(sqlKey.concat("@select"));
     }
     
     /**
@@ -37,7 +37,7 @@ public class SqlKit {
      * @return sql
      */
     public static String getExt(String sqlKey) {
-        return sqlMap.get(sqlKey + "@ext");
+        return SqlKit.get(sqlKey.concat("@ext"));
     }
     
 }
