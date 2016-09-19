@@ -14,24 +14,24 @@ import net.dreamlu.easy.commons.utils.Exceptions;
  */
 public class JsonExceptionInterceptor implements Interceptor{
 
-	@Override
-	public void intercept(Invocation inv) {
-		Controller controller = inv.getController();
-		Render render = controller.getRender();
-		try {
-			inv.invoke();
-		} catch (Throwable e) {
-			if (render instanceof JsonRender) {
-				// json数据异常时返回
-				Record record = new Record();
-				record.set("success", false);
-				record.set("msg", e.getMessage());
-				controller.render(new JsonRender(record).forIE());
-			} else {
-				// 上层errorView进行处理
-				throw Exceptions.unchecked(e);
-			}
-		}
-	}
+    @Override
+    public void intercept(Invocation inv) {
+        Controller controller = inv.getController();
+        try {
+            inv.invoke();
+        } catch (Throwable e) {
+            Render render = controller.getRender();
+            if (render instanceof JsonRender) {
+                // json数据异常时返回
+                Record record = new Record();
+                record.set("success", false);
+                record.set("msg", e.getMessage());
+                controller.render(new JsonRender(record).forIE());
+            } else {
+                // 上层errorView进行处理
+                throw Exceptions.unchecked(e);
+            }
+        }
+    }
 
 }
