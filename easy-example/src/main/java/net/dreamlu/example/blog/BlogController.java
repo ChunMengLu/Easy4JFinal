@@ -34,7 +34,7 @@ public class BlogController extends EasyController {
 	
 	public void upload() {
 	    try {
-	    UploadFile file = getFile("img");
+	    UploadFile file = getFile("img", "", 1);
 	    getSessionAttr("hhh");
 	    String fileName = file.getFileName();
 	    renderText(fileName);

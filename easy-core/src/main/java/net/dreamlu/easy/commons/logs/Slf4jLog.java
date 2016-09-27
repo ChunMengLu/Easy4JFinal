@@ -1,7 +1,5 @@
 package net.dreamlu.easy.commons.logs;
 
-import org.slf4j.LoggerFactory;
-
 import com.jfinal.log.Log;
 
 public class Slf4jLog extends Log {
@@ -9,11 +7,11 @@ public class Slf4jLog extends Log {
 	private org.slf4j.Logger log;
 
 	Slf4jLog(Class<?> clazz) {
-		log = LoggerFactory.getLogger(clazz);
+		log = org.slf4j.LoggerFactory.getLogger(clazz);
 	}
 
 	Slf4jLog(String name) {
-		log = LoggerFactory.getLogger(name);
+		log = org.slf4j.LoggerFactory.getLogger(name);
 	}
 
 	// (marker, this, level, msg,params, t);注意参数顺序

@@ -147,10 +147,9 @@ public final class WebUtils {
 
 		// 加密cookie
 		String userCookie = AESUtils.encrypt(USER_COOKIE_SECRET, cookieBuilder.toString());
-		HttpServletResponse response = c.getResponse();
 
 		// 设置用户的cookie、 -1 维持成session的状态
-		setCookie(response, USER_COOKIE_KEY, userCookie, maxAge);
+		setCookie(c.getResponse(), USER_COOKIE_KEY, userCookie, maxAge);
 	}
 
 	/**
@@ -200,6 +199,11 @@ public final class WebUtils {
 		Cookie cookie = new Cookie(name, value);
 		cookie.setPath("/");
 		cookie.setMaxAge(maxAgeInSeconds);
+		
+		
+//		cookie.setDomain();
+		JFinal.me().getServletContext().getSessionCookieConfig();
+		
 		// 指定为httpOnly保证安全性
 		int version = JFinal.me().getServletContext().getMajorVersion();
 		if (version >= 3) {
@@ -261,7 +265,7 @@ public final class WebUtils {
 		if (StrKit.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getRemoteAddr();
 		}
-		return ip;
+		return StrKit.notBlank(ip) ? ip.split(",")[0] : null;
 	}
 
 }

@@ -10,7 +10,7 @@
 	<modules>
 		<module>easy-core</module>
 		<module>easy-widget</module>
-	    <module>easy-module</module>
+		<module>easy-module</module>
 	</modules>
 
 	<name>Easy4JFinal</name>
@@ -28,11 +28,11 @@
 		<junit.version>4.12</junit.version>
 		<jfinal.version>2.2</jfinal.version>
 		<beetl.version>2.4.0</beetl.version>
-		<druid.version>1.0.19</druid.version>
+		<druid.version>1.0.26</druid.version>
 		<mysql.version>5.1.39</mysql.version>
 		<fastjson.version>1.2.11</fastjson.version>
 		<ehcache.version>2.6.11</ehcache.version>
-		<slf4j.version>1.7.21</slf4j.version>
+		<log4j2.version>2.6.2</log4j2.version>
 	</properties>
 
 	<dependencies>
@@ -64,6 +64,15 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<!-- 使用aliyun maven -->
+	<repositories>
+		<repository>
+			<id>aliyun</id>
+			<name>aliyun</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public</url>
+		</repository>
+	</repositories>
 
 	<!-- push to oss -->
 	<!-- mvn clean deploy -P release -Dgpg.passphrase=xxxx -->

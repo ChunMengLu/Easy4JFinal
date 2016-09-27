@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.jfinal.core.JFinal;
 import com.jfinal.kit.StrKit;
 
 import net.dreamlu.easy.commons.config.EasyConstants;
@@ -16,9 +17,21 @@ public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
     private static SessionManager sessionManager = EasyConstants.getSessionManager();
     
     private final HttpServletResponse response;
+    private final String sessionDomain;
+    
     public SessionRepositoryRequestWrapper(HttpServletRequest request, HttpServletResponse response) {
         super(request);
         this.response = response;
+       
+        JFinal.me().getServletContext().getSessionCookieConfig();
+        
+        String serverName = request.getServerName();
+        int index = serverName.indexOf('.');
+        if (index != -1) {
+            sessionDomain = serverName.substring(index, serverName.length());
+        } else {
+            sessionDomain = serverName;
+        }
     }
     
     private HttpServletRequest getHttpRequest() {

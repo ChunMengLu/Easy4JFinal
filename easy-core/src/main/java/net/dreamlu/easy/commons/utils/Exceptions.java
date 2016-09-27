@@ -7,7 +7,7 @@ import java.io.StringWriter;
  * 异常处理工具类，让异常不再杂乱无章
  * @author L.cm
  */
-public class Exceptions {
+public abstract class Exceptions {
 	/**
 	 * 将CheckedException转换为UncheckedException.
 	 */

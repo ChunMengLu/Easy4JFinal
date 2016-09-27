@@ -6,7 +6,7 @@ import javax.servlet.ServletContext;
 
 import org.beetl.ext.jfinal.BeetlRenderFactory;
 
-import com.alibaba.druid.filter.logging.Slf4jLogFilter;
+import com.alibaba.druid.filter.logging.Log4j2Filter;
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.wall.WallFilter;
 import com.jfinal.config.Constants;
@@ -17,6 +17,7 @@ import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
 import com.jfinal.ext.handler.UrlSkipHandler;
+import com.jfinal.json.FastJsonFactory;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.druid.DruidStatViewHandler;
@@ -24,6 +25,7 @@ import com.jfinal.plugin.ehcache.EhCachePlugin;
 
 import net.dreamlu.controller.UeditorApiController;
 import net.dreamlu.easy.commons.interceptors.JsonExceptionInterceptor;
+import net.dreamlu.easy.commons.logs.Log4j2LogFactory;
 import net.dreamlu.easy.commons.logs.LogPrintStream;
 import net.dreamlu.easy.commons.servlet.ServletContextInterceptor;
 import net.dreamlu.easy.commons.session.SessionHandler;
@@ -46,9 +48,13 @@ public abstract class EasyConfig extends JFinalConfig {
     @Override
     public void configConstant(Constants me) {
         loadPropertyFile("application.properties");
-        devMode = getPropertyToBoolean("app.devMode", false);
+        devMode = getPropertyToBoolean("dev.devMode", false);
         
         me.setDevMode(devMode);
+        // 默认Log4j2日志
+        me.setLogFactory(new Log4j2LogFactory());
+        // 默认fastjson
+        me.setJsonFactory(new FastJsonFactory());
         ConfigParser.parser(prop, me);
     }
 
@@ -93,7 +99,7 @@ public abstract class EasyConfig extends JFinalConfig {
 
         // default 配置Druid数据库连接池插件
         DruidPlugin druidPlugin = new DruidPlugin(url, user, password);
-        druidPlugin.addFilter(new StatFilter()).addFilter(new Slf4jLogFilter());
+        druidPlugin.addFilter(new StatFilter()).addFilter(new Log4j2Filter());
         WallFilter wall = new WallFilter();
         druidPlugin.addFilter(wall);
         me.add(druidPlugin);
@@ -145,6 +151,8 @@ public abstract class EasyConfig extends JFinalConfig {
 
         // 启动
         onEasyStart();
+        // showBanner
+        
     }
 
     public abstract void constant(Constants me);

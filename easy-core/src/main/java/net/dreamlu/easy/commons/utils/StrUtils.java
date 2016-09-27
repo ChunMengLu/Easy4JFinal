@@ -11,6 +11,9 @@ import org.apache.commons.io.FileUtils;
 
 import com.jfinal.kit.PathKit;
 
+import net.dreamlu.easy.commons.parsing.GenericTokenParser;
+import net.dreamlu.easy.commons.parsing.PropTokenHandler;
+
 /**
  * 字符串工具类
  * @author L.cm
@@ -38,21 +41,13 @@ public class StrUtils {
 	 * 
 	 * use: format("my name is ${name}, and i like ${like}!", {"name":"L.cm", "like": "Java"})
 	 * 
-	 * @param s		需要转换的字符串
-	 * @param map	转换所需的键值对集合
+	 * @param text	需要转换的字符串
+	 * @param props	转换所需的键值对集合
 	 * @return		转换后的字符串
 	 */
-	public static String format(String s, Map<String, String> map) {
-		StringBuilder sb = new StringBuilder((int)(s.length() * 1.5));
-		int cursor = 0;
-		for (int start, end; (start = s.indexOf("${", cursor)) != -1 && (end = s.indexOf('}', start)) != -1;) {
-			sb.append(s.substring(cursor, start));
-			String key = s.substring(start + 2, end);
-			sb.append(map.get(StrUtils.trim(key)));
-			cursor = end + 1;
-		}
-		sb.append(s.substring(cursor, s.length()));
-		return sb.toString();
+	public static String format(String text, Map<String, String> props) {
+		GenericTokenParser parser = new GenericTokenParser(new PropTokenHandler(props));
+		return parser.parse(text);
 	}
 
 	/**

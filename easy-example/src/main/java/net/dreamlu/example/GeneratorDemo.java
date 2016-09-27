@@ -35,7 +35,7 @@ public class GeneratorDemo {
 		String modelOutputDir = baseModelOutputDir + "/..";
 
 		// 创建生成器
-		Generator gernerator = new EasyGenerator(getDataSource(), baseModelPackageName, baseModelOutputDir, modelPackageName, modelOutputDir);
+		EasyGenerator gernerator = new EasyGenerator(getDataSource(), baseModelPackageName, baseModelOutputDir, modelPackageName, modelOutputDir);
 		// 设置数据库方言
 		gernerator.setDialect(new MysqlDialect());
 		// 添加不需要生成的表名

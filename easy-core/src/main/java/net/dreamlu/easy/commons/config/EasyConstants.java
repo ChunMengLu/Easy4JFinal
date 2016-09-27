@@ -21,9 +21,9 @@ public final class EasyConstants {
     
     private static SessionManager sessionManager = new EhcacheSessionManager();
     
-    private EasyConstants() {}
-    
     public static final EasyConstants me = new EasyConstants();
+    
+    private EasyConstants() {}
     
     public String getAppUserKey() {
         return appUserKey;

@@ -1,11 +1,11 @@
 package net.dreamlu.easy.commons.config;
 
-import org.beetl.ext.jfinal.BeetlRenderFactory;
+import java.util.Map;
 
 import com.jfinal.config.Constants;
 import com.jfinal.kit.Prop;
-
-import net.dreamlu.easy.commons.logs.Slf4jLogFactory;
+import com.jfinal.kit.StrKit;
+import com.jfinal.render.ViewType;
 
 /**
  * 参数转换处理
@@ -13,22 +13,65 @@ import net.dreamlu.easy.commons.logs.Slf4jLogFactory;
  */
 class ConfigParser {
 
+    /**
+     * 该部分代码太多生硬
+     */
     public static void parser(Prop prop, Constants me) {
-        String encoding = prop.get("app.encoding", "UTF-8");
-        String viewType = prop.get("app.view.type");
-        String viewPrefix = prop.get("app.view.prefix");
-        String viewSuffix = prop.get("app.view.suffix");
+        String encoding     = prop.get("app.encoding", "UTF-8");
+        Integer maxPostSize = prop.getInt("app.max-post-size");
         
-        int maxPostSize = prop.getInt("app.max-post-size");
-        int freeMarkerUpdateDelay = prop.getInt("app.free-marker.update-delay");
+        String viewType     = prop.get("view.type");
+        String viewPrefix   = prop.get("view.prefix");
         
-        String log = prop.get("app.log");
-        String json = prop.get("app.json");
+        String baseDownloadPath = prop.get("base.download-path");
+        String baseUploadPath   = prop.get("base.upload-path");
         
-        // 设置Slf4日志
-        me.setLogFactory(new Slf4jLogFactory());
-        // beetl模版配置工厂
-        me.setMainRenderFactory(new BeetlRenderFactory());
+        String jsonDatePattern  = prop.get("json.date-pattern");
+        
+        if (StrKit.notBlank(encoding)) {
+            me.setEncoding(encoding);
+        }
+        if (StrKit.notBlank(viewType)) {
+            viewType = viewType.toUpperCase();
+            if ("beetl".equalsIgnoreCase(viewType)) {
+                me.setMainRenderFactory(new org.beetl.ext.jfinal.BeetlRenderFactory());
+                if (StrKit.notBlank(viewPrefix)) {
+                    org.beetl.core.Configuration config = org.beetl.ext.jfinal.BeetlRenderFactory.groupTemplate.getConf();
+                    Map<String, String> res = config.getResourceMap();
+                    res.put("root", viewPrefix);
+                }
+            } else {
+                if (StrKit.notBlank(viewPrefix)) {
+                    me.setBaseViewPath(viewPrefix);
+                }
+                me.setViewType(ViewType.valueOf(viewType));
+            }
+        }
+        
+        if (null != maxPostSize) {
+            me.setMaxPostSize(maxPostSize);
+        }
+        
+        if (StrKit.notBlank(baseDownloadPath)) {
+            me.setBaseDownloadPath(baseDownloadPath);
+        }
+        
+        if (StrKit.notBlank(baseUploadPath)) {
+            me.setBaseUploadPath(baseUploadPath);
+        }
+        
+        if (StrKit.notBlank(jsonDatePattern)) {
+            me.setJsonDatePattern(jsonDatePattern);
+        }
+        String userKey    = prop.get("user.key");
+        String userSecret = prop.get("user.secret");
+        
+        String devUrlPrefix = prop.get("dev.urlPrefix");
+        String devDir = prop.get("dev.devDir");
+        
+        int sessionTimeout = prop.getInt("session.timeout", 30);
+        String sessionCookieName = prop.get("session.cookie.name", "easy_session");
+        String sessionCookieDomain = prop.get(" session.cookie.domain");
         
         EasyConstants easyConst = EasyConstants.me;
     }
