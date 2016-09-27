@@ -1,113 +1,240 @@
 package net.dreamlu.easy.commons.utils;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import com.jfinal.plugin.activerecord.CPI;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Record;
+
 import net.sf.cglib.beans.BeanCopier;
 import net.sf.cglib.beans.BeanMap;
 import net.sf.cglib.core.Converter;
 
-import java.util.Map;
-
 /**
- * 实体工具类，目前copy不支持map、list和model
+ * Bean工具类，支持Bean，Model，Record
+ * 
  * @author L.cm
  * email: 596392912@qq.com
  * site:http://www.dreamlu.net
  * @date 2015年4月26日下午5:10:42
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class BeanUtils {
-	/**
-	 * copy 对象属性到另一个对象，默认不使用Convert
-	 * @param src
-	 * @param clazz 类名
-	 * @return T
-	 */
-	public static <T> T copy(Object src, Class<T> clazz) {
-		BeanCopier copier = BeanCopier.create(src.getClass(), clazz, false);
-
-		T to = ClassUtils.newInstance(clazz);
-		copier.copy(src, to, null);
-		return to;
-	}
-
-	/**
-	 * copy 对象属性到另一个对象
-	 * @param src 源对象
-	 * @param clazz 生成的对象Class
-	 * @param converter 自定义转换器
-	 * @return
-	 */
-	public static <T> T copy(Object src, Class<T> clazz, Converter converter) {
-		BeanCopier copier = BeanCopier.create(src.getClass(), clazz, true);
-
-		T to = ClassUtils.newInstance(clazz);
-		copier.copy(src, to, converter);
-		return to;
-	}
-
-	/**
-	 * 拷贝对象
-	 * @param src 源对象
-	 * @param dist 需要赋值的对象
-	 */
-	public static void copy(Object src, Object dist) {
-		BeanCopier copier = BeanCopier
-				.create(src.getClass(), dist.getClass(), false);
-
-		copier.copy(src, dist, null);
-	}
-
-	/**
-	 * 拷贝对象
-	 * @param src 源对象
-	 * @param dist 需要赋值的对象
-	 * @param converter 自定义转换器
-	 * @return
-	 */
-	public static void copy(Object src, Object dist, Converter converter) {
-		BeanCopier copier = BeanCopier
-				.create(src.getClass(), dist.getClass(), true);
-		
-		copier.copy(src, dist, converter);
-	}
-
-	/**
-	 * 将对象装成map形式
-	 * @param src 源对象
-	 * @return Map
-	 */
-	@SuppressWarnings("rawtypes")
-	public static Map toMap(Object src) {
-		return BeanMap.create(src);
-	}
-
-	/**
-	 * 将java Bean转成model
-	 * @param src 源对象
-	 * @param modelClass model类
-	 * @return Model
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T extends Model<?>> T toModel(Object src, Class<T> modelClass) {
-		Map<String, Object> attrs = BeanUtils.toMap(src);
-		T to = ClassUtils.newInstance(modelClass);
-		
-		to._setAttrs(attrs);
-		return to;
-	}
-
-	/**
-	 * 将java bean转成Record
-	 * @param src 源对象
-	 * @return Record
-	 */
-	@SuppressWarnings("unchecked")
-	public static Record toRecord(Object src) {
-		Map<String, Object> columns = BeanUtils.toMap(src);
-		Record to = ClassUtils.newInstance(Record.class);
-		
-		to.setColumns(columns);
-		return to;
-	}
-
+    /**
+     * copy 对象属性到另一个对象，默认不使用Convert
+     * @param src
+     * @param clazz 类名
+     * @return T
+     */
+    public static <T> T copy(Object src, Class<T> clazz) {
+        BeanCopier copier = BeanCopier.create(src.getClass(), clazz, false);
+        
+        T to = ClassUtils.newInstance(clazz);
+        copier.copy(src, to, null);
+        return to;
+    }
+    
+    /**
+     * copy 对象属性到另一个对象
+     * @param src 源对象
+     * @param clazz 生成的对象Class
+     * @param converter 自定义转换器
+     * @return
+     */
+    public static <T> T copy(Object src, Class<T> clazz, Converter converter) {
+        BeanCopier copier = BeanCopier.create(src.getClass(), clazz, true);
+        
+        T to = ClassUtils.newInstance(clazz);
+        copier.copy(src, to, converter);
+        return to;
+    }
+    
+    /**
+     * 拷贝对象
+     * @param src 源对象
+     * @param dist 需要赋值的对象
+     */
+    public static void copy(Object src, Object dist) {
+        BeanCopier copier = BeanCopier
+                .create(src.getClass(), dist.getClass(), false);
+        
+        copier.copy(src, dist, null);
+    }
+    
+    /**
+     * 拷贝对象
+     * @param src 源对象
+     * @param dist 需要赋值的对象
+     * @param converter 自定义转换器
+     * @return
+     */
+    public static void copy(Object src, Object dist, Converter converter) {
+        BeanCopier copier = BeanCopier
+                .create(src.getClass(), dist.getClass(), true);
+        
+        copier.copy(src, dist, converter);
+    }
+    
+    /**
+     * 将对象装成map形式
+     * @param src 源对象
+     * @return Map
+     */
+    public static Map toMap(Object src) {
+        return BeanMap.create(src);
+    }
+    
+    /**
+     * copy 老model的属性到新model
+     * @param src 源model
+     * @param dist 新model
+     */
+    public static void copy(Model<?> src, Model<?> dist) {
+        dist._setAttrs(CPI.getAttrs(src));
+    }
+    
+    /**
+     * copy 老model的属性到新Record
+     * @param src 源model
+     * @param dist 新Record
+     */
+    public static void copy(Model<?> src, Record dist) {
+        dist.setColumns(src);
+    }
+    
+    /**
+     * copy 老Record的属性到新model
+     * @param src 源Record
+     * @param dist 新model
+     */
+    public static void copy(Record src, Model<?> dist) {
+        dist._setAttrs(src.getColumns());
+    }
+    
+    /**
+     * copy java Bean到model
+     * @param src
+     * @param dist
+     */
+    public static void copy(Object src, Model<?> dist) {
+        Map<String, Object> attrs = BeanUtils.toMap(src);
+        dist._setAttrs(attrs);
+    }
+    
+    /**
+     * copy java Bean到record
+     * @param src
+     * @param dist
+     */
+    public static void copy(Object src, Record dist) {
+        Map<String, Object> columns = BeanUtils.toMap(src);
+        dist.setColumns(columns);
+    }
+    
+    // 类属性缓存，空间换时间
+    private static final ConcurrentMap<Class<?>, PropertyDescriptor[]> classPropCache =
+            new ConcurrentHashMap<Class<?>, PropertyDescriptor[]>(64);
+    
+    /**
+     * 获取Bean的属性
+     * @param bean
+     * @return
+     */
+    private static PropertyDescriptor[] getPropertyDescriptors(Object bean) {
+        Class<?> beanClass = bean.getClass();
+        PropertyDescriptor[] cachePds = classPropCache.get(beanClass);
+        if (null != cachePds) {
+            return cachePds;
+        }
+        try {
+            BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
+            cachePds = beanInfo.getPropertyDescriptors();
+            classPropCache.put(beanClass, cachePds);
+            return cachePds;
+        } catch (IntrospectionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    /**
+     * 获取Bean的属性
+     * @param bean bean
+     * @param propertyName 属性名
+     * @return 属性值
+     */
+    public static Object getProperty(Object bean, String propertyName) {
+        if (bean instanceof Map) {
+            return ((Map)bean).get(propertyName);
+        }
+        if (bean instanceof Record) {
+            return ((Record)bean).get(propertyName);
+        }
+        if (bean instanceof Model) {
+            return ((Model)bean).get(propertyName);
+        }
+        PropertyDescriptor[] beanPds = getPropertyDescriptors(bean);
+        for (PropertyDescriptor propertyDescriptor : beanPds) {
+            if (propertyDescriptor.getName().equals(propertyName)){
+                Method readMethod = propertyDescriptor.getReadMethod();
+                if (null == readMethod) {
+                    continue;
+                }
+                if (!readMethod.isAccessible()) {
+                    readMethod.setAccessible(true);
+                }
+                try {
+                    return readMethod.invoke(bean);
+                } catch (Throwable ex) {
+                    throw new RuntimeException("Could not read property '" + propertyName + "' from bean", ex);
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * 设置Bean属性
+     * @param bean bean
+     * @param propertyName 属性名
+     * @param value 属性值
+     */
+    public static void setProperty(Object bean, String propertyName, Object value) {
+        if (bean instanceof Map) {
+            ((Map) bean).put(propertyName, value);
+            return;
+        }
+        if (bean instanceof Record) {
+            ((Record)bean).set(propertyName, value);
+            return;
+        }
+        if (bean instanceof Model) {
+            ((Model)bean).set(propertyName, value);
+            return;
+        }
+        PropertyDescriptor[] beanPds = getPropertyDescriptors(bean);
+        for (PropertyDescriptor propertyDescriptor : beanPds) {
+            if (propertyDescriptor.getName().equals(propertyName)){
+                Method writeMethod = propertyDescriptor.getWriteMethod();
+                if (null == writeMethod) {
+                    continue;
+                }
+                if (!writeMethod.isAccessible()) {
+                    writeMethod.setAccessible(true);
+                }
+                try {
+                    writeMethod.invoke(bean, value);
+                } catch (Throwable ex) {
+                    throw new RuntimeException("Could not set property '" + propertyName + "' to bean", ex);
+                }
+            }
+        }
+    }
+    
 }
