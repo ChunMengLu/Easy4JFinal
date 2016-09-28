@@ -85,7 +85,7 @@ public abstract class FileUtils {
         File dir = file.getParentFile();
         String name = file.getName();
         boolean accept = filter.accept(dir, name);
-        if (accept) {
+        if (file.exists() && accept) {
             fileList.add(file);
         }
         return fileList;
