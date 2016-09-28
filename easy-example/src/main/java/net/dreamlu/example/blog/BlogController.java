@@ -3,7 +3,6 @@ package net.dreamlu.example.blog;
 
 import com.jfinal.aop.Before;
 import com.jfinal.upload.UploadFile;
-import com.oreilly.servlet.exception.LimitedException;
 
 import net.dreamlu.easy.commons.base.EasyController;
 import net.dreamlu.example.model.Blog;
@@ -39,7 +38,7 @@ public class BlogController extends EasyController {
 	    String fileName = file.getFileName();
 	    renderText(fileName);
 	    }catch(Exception e) {
-	        System.out.println(e.getCause() instanceof LimitedException);
+	        System.out.println(e.getMessage());
 	    }
 	}
 	

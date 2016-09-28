@@ -11,7 +11,7 @@ import java.util.Vector;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 
-import com.oreilly.servlet.exception.LimitedException;
+import net.dreamlu.easy.commons.res.StringManager;
 
 /** 
  * A utility class to handle <code>multipart/form-data</code> requests,
@@ -90,6 +90,9 @@ public class MultipartParser {
   /** preferred encoding */
   private String encoding = DEFAULT_ENCODING;
 
+  /** error message */
+  private static final StringManager sm = StringManager.getManager(MultipartParser.class);
+  
   /**
    * Creates a <code>MultipartParser</code> from the specified request,
    * which limits the upload size to the specified length, buffers for 
@@ -167,21 +170,20 @@ public class MultipartParser {
 
     if (type == null || 
         !type.toLowerCase().startsWith("multipart/form-data")) {
-      throw new IOException("Posted content type isn't multipart/form-data");
+      throw new IOException(sm.getString("error.formType"));
     }
 
     // Check the content length to prevent denial of service attacks
     int length = req.getContentLength();
     if (length > maxSize) {
-      throw new LimitedException("Posted content length of " + length + 
-                            " exceeds limit of " + maxSize);
+      throw new IOException(sm.getString("error.postLimit", length, maxSize));
     }
 
     // Get the boundary string; it's included in the content type.
     // Should look something like "------------------------12012133613061"
     String boundary = extractBoundary(type);
     if (boundary == null) {
-      throw new IOException("Separation boundary was not specified");
+      throw new IOException(sm.getString("error.boundary"));
     }
 
     ServletInputStream in = req.getInputStream();
@@ -206,7 +208,7 @@ public class MultipartParser {
     do {
       String line = readLine();
       if (line == null) {
-        throw new IOException("Corrupt form data: premature ending");
+        throw new IOException(sm.getString("error.formData"));
       }
       // See if this line is the boundary, and if so break
       if (line.startsWith(boundary)) {
@@ -378,11 +380,11 @@ public class MultipartParser {
     int start = line.indexOf("content-disposition: ");
     int end = line.indexOf(";");
     if (start == -1 || end == -1) {
-      throw new IOException("Content disposition corrupt: " + origline);
+      throw new IOException(sm.getString("error.content.disposition", origline));
     }
     String disposition = line.substring(start + 21, end).trim();
     if (!disposition.equals("form-data")) {
-      throw new IOException("Invalid content disposition: " + disposition);
+      throw new IOException(sm.getString("error.content.disposition.invalid", disposition));
     }
 
     // Get the field name
@@ -395,7 +397,7 @@ public class MultipartParser {
       start = line.indexOf("name=", end);
       end = line.indexOf(";", start + 6);
       if (start == -1) {
-        throw new IOException("Content disposition corrupt: " + origline);
+        throw new IOException(sm.getString("error.content.disposition.corrupt", origline));
       }
       else if (end == -1) {
         end = line.length();

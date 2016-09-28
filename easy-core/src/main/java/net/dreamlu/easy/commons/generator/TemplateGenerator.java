@@ -1,6 +1,7 @@
 package net.dreamlu.easy.commons.generator;
 
 import java.util.List;
+import java.util.Map;
 
 import com.jfinal.plugin.activerecord.generator.TableMeta;
 
@@ -10,8 +11,8 @@ import com.jfinal.plugin.activerecord.generator.TableMeta;
  */
 public class TemplateGenerator {
 
-    public void generate(List<TableMeta> tableMetas) {
-        // TODO Auto-generated method stub
+    public void generate(String dir, String outPutDir, Map<String, Object> vars, List<TableMeta> tableMetas) {
+        
         
     }
 

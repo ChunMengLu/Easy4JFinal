@@ -95,12 +95,12 @@ public class SqlInXmlPlugin implements IPlugin {
     }
     
     /**
-     * 装载并处理sql
+     * 装载并处理sql，减少不必要的不可见字符
      * @param sqlKey sqlKey
      * @param sqlValue sql
      */
     private void put(String sqlKey, String sqlValue) {
-        sqlValue = sqlValue.replaceAll("\\s+", " ");
+        sqlValue = sqlValue.replaceAll("\\s+", " ").trim();
         sqlMap.put(sqlKey, sqlValue);
     }
     

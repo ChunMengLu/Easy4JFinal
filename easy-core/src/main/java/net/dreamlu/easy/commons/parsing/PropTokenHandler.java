@@ -15,7 +15,10 @@ public class PropTokenHandler implements TokenHandler {
 
     @Override
     public String handleToken(String content) {
-        return prop.get(content);
+        if (null == content) {
+            return "";
+        }
+        return prop.get(content.trim());
     }
 
 }
