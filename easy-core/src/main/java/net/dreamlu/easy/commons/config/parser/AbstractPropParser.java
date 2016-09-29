@@ -5,5 +5,6 @@ package net.dreamlu.easy.commons.config.parser;
  * @author Dreamlu
  */
 public abstract class AbstractPropParser {
+    protected boolean enable = false;
     
 }
