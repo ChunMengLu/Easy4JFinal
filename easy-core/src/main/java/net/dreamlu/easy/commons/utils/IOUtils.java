@@ -1,5 +1,6 @@
 package net.dreamlu.easy.commons.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,4 +60,19 @@ public abstract class IOUtils {
         return out.toString();
     }
 
+    public static byte[] toByteArray(InputStream is) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            int n = 0;
+            while (-1 != (n = is.read(buffer))) {
+                out.write(buffer, 0, n);
+            }
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(out);
+        }
+    }
 }

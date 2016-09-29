@@ -81,6 +81,9 @@ public abstract class FileSearcher {
     private void doGetClasspathResources(Collection<URL> urls, String pkgdir, boolean recursive) {
         for (URL url : urls) {
             String protocol = url.getProtocol();
+            
+            System.out.println(url.getPath());
+            
             if ("file".equals(protocol)) {
                 File file = URLUtils.toFileObject(url);
                 if (file.isDirectory()) {
@@ -242,6 +245,8 @@ public abstract class FileSearcher {
   
         public boolean isJavaClass();
   
+        public boolean isXml();
+
         public String getName();
   
         public String getRelativePathName();
@@ -279,17 +284,22 @@ public abstract class FileSearcher {
         public boolean isJavaClass() {
             return !file.isDirectory() && file.getName().endsWith(".class");
         }
-  
+
+        @Override
+        public boolean isXml() {
+            return !file.isDirectory() && file.getName().endsWith(".xml");
+        }
+
         @Override
         public String getName() {
             return file.getName();
         }
-  
+
         @Override
         public String getRelativePathName() {
             return relativeName;
         }
-  
+
         @Override
         public String getQualifiedJavaName() {
             String name;
@@ -307,68 +317,73 @@ public abstract class FileSearcher {
                 throw new IllegalStateException("FileEntry is not a Java Class: " + toString());
             }
         }
-  
+
         @Override
         public long length() {
             return file.length();
         }
-  
+
         @Override
         public long lastModified() {
             return file.lastModified();
         }
-  
+
         @Override
         public InputStream getInputStream() throws IOException {
             return new FileInputStream(file);
         }
-  
+
         @Override
         public String toString() {
             return file.toString();
         }
     }
-  
+
     public static class ZipFileEntry implements FileEntry {
         private final ZipFile zip;
         private final ZipEntry entry;
         private final String relativeName;
-  
+
         public ZipFileEntry(ZipFile zip, ZipEntry entry, String relativeName) {
             this.zip = zip;
             this.entry = entry;
             this.relativeName = relativeName;
         }
-  
+
         public ZipFile getZipFile() {
             return zip;
         }
-  
+
         public ZipEntry getZipEntry() {
             return entry;
         }
-  
+
         @Override
         public boolean isDirectory() {
             return entry.isDirectory();
         }
-  
+
         @Override
         public boolean isJavaClass() {
             return entry.getName().endsWith(".class");
         }
-  
+
+        @Override
+        public boolean isXml() {
+            return entry.getName().endsWith(".xml");
+        }
+
         @Override
         public String getName() {
             int ipos = relativeName.lastIndexOf('/');
             return ipos != -1 ? relativeName.substring(ipos + 1) : relativeName;
         }
-  
+
         @Override
         public String getRelativePathName() {
             return relativeName;
         }
-  
+
         @Override
         public String getQualifiedJavaName() {
             String name = entry.getName();
@@ -381,22 +396,22 @@ public abstract class FileSearcher {
                 throw new IllegalStateException("FileEntry is not a Java Class: " + toString());
             }
         }
-  
+
         @Override
         public long length() {
             return entry.getSize();
         }
-  
+
         @Override
         public long lastModified() {
             return entry.getTime();
         }
-  
+
         @Override
         public InputStream getInputStream() throws IOException {
             return zip.getInputStream(entry);
         }
-  
+
         @Override
         public String toString() {
             return entry.toString();
