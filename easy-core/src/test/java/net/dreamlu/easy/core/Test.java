@@ -21,8 +21,5 @@ public class Test {
 		System.out.println("a.a..a.".indexOf('.'));
 		
 		JSONObject xxx = JSON.parseObject("{}");
-		JSONObject obj1112 = xxx.getJSONObject("data").getJSONObject("1112");
-		
-		String sss = obj1112.getString("businessType");
 	}
 }

@@ -26,7 +26,8 @@ public class ViewDevHandler extends Handler {
     public void handle(String target, HttpServletRequest request,
                        HttpServletResponse response, boolean[] isHandled) {
         if (target.startsWith(urlPrefix)) {
-            String view = target.substring(0, target.lastIndexOf('.'));
+            // 修改成urlPrefix.length()，感谢程式人生的建议
+            String view = target.substring(urlPrefix.length(), target.lastIndexOf('.'));
             RenderFactory.me().getDefaultRender(devDir + view).setContext(request, response).render();
             // 跳出
             isHandled[0] = true;

@@ -3,6 +3,8 @@ package net.dreamlu.easy.commons.utils;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -27,6 +29,13 @@ public class StrUtils {
 	public static String trim(String str) {
 		return str == null ? null : str.trim();
 	}
+	
+	 public static String trimToEmpty(String str) {
+       if (str == null) {
+           return "";
+       }
+       return str.trim();
+   }
 	
 	/**
 	 * 获取UUID，去掉`-`的
@@ -167,4 +176,18 @@ public class StrUtils {
 		return sb.toString();
 	}
 	
+  public static String[] split(String str, char delimiter) {
+      List<String> results = new ArrayList<String>();
+
+      int ipos = 0, lastpos = 0;
+      while ((ipos = str.indexOf(delimiter, lastpos)) != -1) {
+          results.add(str.substring(lastpos, ipos));
+          lastpos = ipos + 1;
+      }
+      if (lastpos < str.length()) {
+          results.add(str.substring(lastpos));
+      }
+      return results.toArray(new String[results.size()]);
+  }
+
 }

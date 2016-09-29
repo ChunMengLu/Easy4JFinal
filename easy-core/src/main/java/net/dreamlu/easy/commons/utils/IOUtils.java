@@ -49,7 +49,7 @@ public abstract class IOUtils {
      */
     public static String toString(InputStream input, Charset charset) throws IOException {
         InputStreamReader in = new InputStreamReader(input, charset);
-        StringBuffer out = new StringBuffer();
+        StringBuilder out = new StringBuilder();
         char[] c = new char[DEFAULT_BUFFER_SIZE];
         for (int n; (n = in.read(c)) != -1;) {
             out.append(new String(c, 0, n));

@@ -16,7 +16,7 @@ public class SuffixFileFilter implements FilenameFilter, Serializable{
     public SuffixFileFilter(String suffix) {
         this.suffix = suffix;
     }
-
+    
     @Override
     public boolean accept(File dir, String name) {
         return name.endsWith(suffix);
