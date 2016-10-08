@@ -84,27 +84,54 @@ public class EasyController extends Controller {
     public void renderJson(String key, Object value) {
         render(new JsonRender(key, value).forIE());
     }
-
     @Override
     public void renderJson() {
         render(new JsonRender().forIE());
     }
-
     @Override
     public void renderJson(String[] attrs) {
         render(new JsonRender(attrs).forIE());
     }
-
     @Override
     public void renderJson(String jsonText) {
         render(new JsonRender(jsonText).forIE());
     }
-
     @Override
     public void renderJson(Object object) {
         render(new JsonRender(object).forIE());
     }
     //---------------重写renderJson，方便IE使用--------------------//
+    //---------------renderJsonp，方便使用------------------------//
+    public void renderJsonp(String key, Object value) {
+        renderJsonp(new JsonRender(key, value).forIE());
+    }
+    public void renderJsonp() {
+        renderJsonp(new JsonRender().forIE());
+    }
+    public void renderJsonp(String[] attrs) {
+        renderJsonp(new JsonRender(attrs).forIE());
+    }
+    public void renderJsonp(String jsonText) {
+        renderJsonp(new JsonRender(jsonText).forIE());
+    }
+    public void renderJsonp(Object object) {
+        renderJsonp(new JsonRender(object).forIE());
+    }
+    /**
+     * 返回jsonp 
+     * 
+     * callback参数：默认为 callback 
+     * 
+     * @param render JsonRender
+     */
+    private void renderJsonp(JsonRender render) {
+        String callback = getPara("callback");
+        String json = render.getJsonText();
+        StringBuilder sb = new StringBuilder(200);
+        sb.append(callback).append("(").append(json).append(")");
+        renderJavascript(sb.toString());
+    }
+    //---------------renderJsonp，方便使用------------------------//
 
     /**
      * DataTable渲染
