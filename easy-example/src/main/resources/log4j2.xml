@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration status="off">
     <properties>
-        <Property name="logdir">${sys:catalina.base}/logs</Property>
+        <property name="logdir">${sys:catalina.base}/logs</property>
         <!-- 日志切割的最小单位 -->
         <property name="EVERY_FILE_SIZE">100M</property>
     </properties>

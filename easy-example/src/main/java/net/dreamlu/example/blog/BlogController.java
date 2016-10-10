@@ -1,7 +1,10 @@
 package net.dreamlu.example.blog;
 
 
+import java.util.List;
+
 import com.jfinal.aop.Before;
+import com.jfinal.kit.JsonKit;
 import com.jfinal.upload.UploadFile;
 
 import net.dreamlu.easy.commons.base.EasyController;
@@ -32,14 +35,14 @@ public class BlogController extends EasyController {
 	}
 	
 	public void upload() {
-	    try {
-	    UploadFile file = getFile("img", "", 1);
-	    getSessionAttr("hhh");
-	    String fileName = file.getFileName();
-	    renderText(fileName);
-	    }catch(Exception e) {
-	        System.out.println(e.getMessage());
-	    }
+		try {
+			List<UploadFile> list = getFiles();
+			System.out.println(JsonKit.toJson(list));
+			renderJson(list);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			renderText(e.getMessage());
+		}
 	}
 	
 	@Before(BlogValidator.class)

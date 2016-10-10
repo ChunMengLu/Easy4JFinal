@@ -18,4 +18,6 @@ public interface EasyConst {
     int SESSION_TIMEOUT          = 30;
     String SESSION_COOKIE_NAME   = "EASY_SESSION";
     String SESSION_EHCACHE_NAME  = "session";
+    
+    
 }

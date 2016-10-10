@@ -1,8 +1,13 @@
 package net.dreamlu.easy.commons.config;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Properties;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.jfinal.config.Constants;
+import com.jfinal.core.JFinal;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.StrKit;
 import com.jfinal.render.ViewType;
@@ -17,6 +22,14 @@ class ConfigParser {
      * 该部分代码太多生硬
      */
     public static void parser(Prop prop, Constants me) {
+        // 第一步对 key 按照前缀排序，将属性写到TreeMap
+        Properties props = prop.getProperties();
+        SortedMap<String, String> propMap = new TreeMap<String, String>();
+        for (Object object : props.keySet()) {
+            String key = (String) object;
+            propMap.put(key, prop.get(key));
+        }
+        
         String encoding     = prop.get("app.encoding", "UTF-8");
         Integer maxPostSize = prop.getInt("app.max-post-size");
         

@@ -4,8 +4,10 @@ package net.dreamlu.example.common;
 import org.beetl.ext.jfinal.BeetlRenderFactory;
 
 import com.jfinal.config.Constants;
+import com.jfinal.config.Handlers;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
+import com.jfinal.ext.handler.UrlSkipHandler;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.redis.RedisPlugin;
 
@@ -36,8 +38,14 @@ public class DemoConfig extends EasyConfig {
 	}
 
 	@Override
+    public void configHandler(Handlers me) {
+        me.add(new UrlSkipHandler("/ws", false));
+        super.configHandler(me);
+    }
+
+    @Override
 	public void plugin(Plugins plugins) {
-	    plugins.add(new RedisPlugin("main", "127.0.0.1"));
+//	    plugins.add(new RedisPlugin("main", "127.0.0.1"));
 	}
 
 	@Override

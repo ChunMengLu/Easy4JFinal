@@ -9,7 +9,6 @@ import net.dreamlu.easy.commons.session.SessionManager;
  * @author L.cm
  */
 public final class EasyConstants {
-
     private String appUserKey          = EasyConst.APP_USER_KEY;
     private String appUserSecret       = EasyConst.APP_USER_SECRET;
     private String appDevUrlPrefix     = EasyConst.APP_DEV_URL_PREFIX;
