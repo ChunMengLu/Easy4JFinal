@@ -4,16 +4,21 @@
 
 package com.oreilly.servlet;
 
-import java.io.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import com.oreilly.servlet.multipart.MultipartParser;
-import com.oreilly.servlet.multipart.Part;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpUtils;
+
 import com.oreilly.servlet.multipart.FilePart;
-import com.oreilly.servlet.multipart.ParamPart;
 import com.oreilly.servlet.multipart.FileRenamePolicy;
+import com.oreilly.servlet.multipart.MultipartParser;
+import com.oreilly.servlet.multipart.ParamPart;
+import com.oreilly.servlet.multipart.Part;
 
 /** 
  * A utility class to handle <code>multipart/form-data</code> requests,
@@ -65,12 +70,13 @@ import com.oreilly.servlet.multipart.FileRenamePolicy;
  * @version 1.1, 1999/01/15, JSDK readLine() bug workaround<br>
  * @version 1.0, 1998/09/18<br>
  */
+@SuppressWarnings({"rawtypes", "unchecked", "deprecation"})
 public class MultipartRequest {
 
   private static final int DEFAULT_MAX_POST_SIZE = 1024 * 1024;  // 1 Meg
 
   protected Hashtable parameters = new Hashtable();  // name - Vector of values
-  protected Hashtable files = new Hashtable();       // name - UploadedFile
+  protected FileTable files = new FileTable();       // name - UploadedFile
 
   /**
    * Constructs a new MultipartRequest to handle the specified request, 
@@ -193,7 +199,7 @@ public class MultipartRequest {
    * @exception IOException if the uploaded content is larger than 
    * <tt>maxPostSize</tt> or there's a problem reading or parsing the request.
    */
-  public MultipartRequest(HttpServletRequest request,
+public MultipartRequest(HttpServletRequest request,
                           String saveDirectory,
                           int maxPostSize,
                           String encoding,
