@@ -10,7 +10,7 @@ public class SqlUtils {
 	/**
 	 * 生成sql占位符 ?,?,?
 	 * @param size
-	 * @return
+	 * @return ?,?,?
 	 */
 	public static String sqlHolder(int size) {
 		String[] paras = new String[size];

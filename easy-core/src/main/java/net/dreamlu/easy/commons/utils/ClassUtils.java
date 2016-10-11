@@ -65,7 +65,7 @@ public abstract class ClassUtils {
     public static ClassLoader getContextClassLoader() {
         ClassLoader classLoader = null;
         try {
-          classLoader = Thread.currentThread().getContextClassLoader();
+            classLoader = Thread.currentThread().getContextClassLoader();
         } catch (Throwable ex) {
             // Cannot access thread context ClassLoader - falling back...
         }

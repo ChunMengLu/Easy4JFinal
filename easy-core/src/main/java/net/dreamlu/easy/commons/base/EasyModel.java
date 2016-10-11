@@ -130,7 +130,31 @@ public class EasyModel<M extends EasyModel> extends Model<M> {
         onDeleteAfter();
         return result;
     }
-
+    
+    /**
+     * model删除
+     * @return {boolean}
+     */
+    @Override
+    public boolean deleteById(Object idValue) {
+        onDeleteBefore();
+        boolean result = super.deleteById(idValue);
+        onDeleteAfter();
+        return result;
+    }
+    
+    /**
+     * model删除
+     * @return {boolean}
+     */
+    @Override
+    public boolean deleteById(Object... idValues) {
+        onDeleteBefore();
+        boolean result = super.deleteById(idValues);
+        onDeleteAfter();
+        return result;
+    }
+    
     /**
      * 删除之前
      */

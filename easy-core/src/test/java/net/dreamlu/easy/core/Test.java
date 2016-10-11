@@ -7,7 +7,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import net.dreamlu.easy.commons.base.EasyModel;
-import net.dreamlu.easy.commons.result.DataTables;
 import net.dreamlu.easy.commons.utils.BeanUtils;
 
 /**
@@ -26,6 +25,6 @@ public class Test {
 		
 		TestBean bena = new TestBean();
 		
-		BeanUtils.setProperty(bena, "age", "10");
+		BeanUtils.setProperty(bena, "age", 10);
 	}
 }

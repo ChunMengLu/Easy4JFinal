@@ -1,6 +1,8 @@
 package net.dreamlu.easy.commons.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -61,8 +63,15 @@ public class XmlHelper {
     }
 
     public static XmlHelper of(File file) {
-        InputSource inputSource = new InputSource(file.toURI().toASCIIString());
-        return create(inputSource);
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            return of(fis);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }  finally {
+            IOUtils.closeQuietly(fis);
+        }
     }
 
     public static XmlHelper of(String xmlStr) {

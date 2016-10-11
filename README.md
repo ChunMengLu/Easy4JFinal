@@ -6,7 +6,7 @@
 
 > 2.减少JFinal的配置项，学习Spring-boot将配置集中到`application.properties`中;
 
-> 3.集成Cos上传源码，减少学习成本;
+> 3.集成Cos上传源码，fixed处理多file name相同bug，减少学习成本;
 
 > 4.扩展model，添加事件;
 
@@ -14,7 +14,7 @@
 
 > 6.集成各种Utils;
 
-> 7.集成Log4j2、Slf4j;Xml sql管理;
+> 7.集成Log4j2、Xml sql管理;
 
 > 8.类型Spring的ServletContextHolder;
 
