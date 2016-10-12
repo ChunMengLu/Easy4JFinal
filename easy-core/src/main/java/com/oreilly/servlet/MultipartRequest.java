@@ -78,6 +78,8 @@ public class MultipartRequest {
   protected Hashtable parameters = new Hashtable();  // name - Vector of values
   protected FileTable files = new FileTable();       // name - UploadedFile
 
+  private final String realPath;
+  
   /**
    * Constructs a new MultipartRequest to handle the specified request, 
    * saving any uploaded files to the given directory, and limiting the 
@@ -199,7 +201,7 @@ public class MultipartRequest {
    * @exception IOException if the uploaded content is larger than 
    * <tt>maxPostSize</tt> or there's a problem reading or parsing the request.
    */
-public MultipartRequest(HttpServletRequest request,
+  public MultipartRequest(HttpServletRequest request,
                           String saveDirectory,
                           int maxPostSize,
                           String encoding,
@@ -223,6 +225,9 @@ public MultipartRequest(HttpServletRequest request,
     // Check saveDirectory is writable
     if (!dir.canWrite())
       throw new IllegalArgumentException("Not writable: " + saveDirectory);
+
+    // realPath 用来处理
+    this.realPath = request.getServletContext().getRealPath("/");
 
     // Parse the incoming multipart, storing files in the dir provided, 
     // and populate the meta objects which describe what we found
@@ -416,9 +421,22 @@ public MultipartRequest(HttpServletRequest request,
    * @return the original file name of the file.
    */
   public String getOriginalFileName(String name) {
+    // L.cm 更改计划 2016-10-12
+    // 将原来的FileName 改写成 相对tomcat的新路径 + 新文件名，方便处理;
+    // 1. 如果用户使用的是绝对路径 如 /home/www 时返回新文件名
+    // 2. 如果用户是将文件传到服务器WebRoot下则返回相对于WebRoot的路径;
     try {
       UploadedFile file = (UploadedFile)files.get(name);
-      return file.getOriginalFileName();  // may be null
+      
+      String dirPath = file.getDir();
+      if (dirPath.startsWith(realPath)) {
+        // 处理地址为相对目录
+        String fileDir = dirPath.substring(realPath.length())
+                  .replace("\\", "/");
+        
+        return fileDir + "/" + file.getFilesystemName();
+      }
+      return file.getFilesystemName();  // may be null
     }
     catch (Exception e) {
       return null;
@@ -465,10 +483,10 @@ public MultipartRequest(HttpServletRequest request,
 //
 class UploadedFile {
 
-  private String dir;
-  private String filename;
-  private String original;
-  private String type;
+  private final String dir;
+  private final String filename;
+  private final String original;
+  private final String type;
 
   UploadedFile(String dir, String filename, String original, String type) {
     this.dir = dir;
@@ -489,6 +507,10 @@ class UploadedFile {
     return original;
   }
 
+  public String getDir() {
+    return dir;
+  }
+  
   public File getFile() {
     if (dir == null || filename == null) {
       return null;
