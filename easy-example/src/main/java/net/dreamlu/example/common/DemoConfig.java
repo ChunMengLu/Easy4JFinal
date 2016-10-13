@@ -7,14 +7,15 @@ import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
-import com.jfinal.ext.handler.UrlSkipHandler;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
-import com.jfinal.plugin.redis.RedisPlugin;
+import com.jfinal.upload.OreillyCos;
 
 import net.dreamlu.easy.commons.config.EasyConfig;
+import net.dreamlu.easy.commons.upload.EasyFileRenamePolicy;
 import net.dreamlu.example.blog.BlogController;
 import net.dreamlu.example.index.IndexController;
 import net.dreamlu.example.model._MappingKit;
+import net.dreamlu.example.ws.TimeTaskTest;
 
 /**
  * API引导式配置
@@ -39,7 +40,6 @@ public class DemoConfig extends EasyConfig {
 
 	@Override
     public void configHandler(Handlers me) {
-        me.add(new UrlSkipHandler("/ws", false));
         super.configHandler(me);
     }
 
@@ -48,8 +48,11 @@ public class DemoConfig extends EasyConfig {
 //	    plugins.add(new RedisPlugin("main", "127.0.0.1"));
 	}
 
-	@Override
+    @Override
 	public void onEasyStart() {
-		
+        // 注意 以 / 开头表绝对路径 比如 /var/home/tomcat
+        String fileRenameXxx = "image/{yyyy}{mm}{dd}/{time}{rand:6}";
+        OreillyCos.setFileRenamePolicy(new EasyFileRenamePolicy(fileRenameXxx));
+	    TimeTaskTest.start();
 	}
 }

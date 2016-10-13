@@ -1,11 +1,11 @@
 /**
- * 文件上传重命名策略
+ * 文件上传重命名策略，采用UEditor的格式！
  * 
  * 上传保存路径,可以自定义保存路径和文件名格式 
  * 
- * @author Dreamlu
+ * @author L.cm
  * 
- * 例如： "/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}"
+ * 例如： "image/{yyyy}{mm}{dd}/{time}{rand:6}"
  * 
  * {filename} 会替换成原文件名,配置这项需要注意中文乱码问题 
  * {rand:6} 会替换成随机数,后面的数字是随机数的位数 

@@ -79,6 +79,7 @@ public class MultipartRequest {
   protected FileTable files = new FileTable();       // name - UploadedFile
 
   private final String realPath;
+  private final String saveDir;
   
   /**
    * Constructs a new MultipartRequest to handle the specified request, 
@@ -228,6 +229,7 @@ public class MultipartRequest {
 
     // realPath 用来处理
     this.realPath = request.getServletContext().getRealPath("/");
+    this.saveDir  = saveDirectory;
 
     // Parse the incoming multipart, storing files in the dir provided, 
     // and populate the meta objects which describe what we found
@@ -280,7 +282,9 @@ public class MultipartRequest {
           filePart.setRenamePolicy(policy);  // null policy is OK
           // The part actually contained a file
           filePart.writeTo(dir);
-          files.put(name, new UploadedFile(dir.toString(),
+          // 重命名后的目录名已经改变，不能采用老的dir
+          File file = new File(filePart.getFilePath());
+          files.put(name, new UploadedFile(file.getParent(),
                                            filePart.getFileName(),
                                            fileName,
                                            filePart.getContentType()));
@@ -403,9 +407,17 @@ public class MultipartRequest {
    * @return the filesystem name of the file.
    */
   public String getFilesystemName(String name) {
+    // L.cm 更改计划 2016-10-13
+    // 由于JFinal2.2修改了文件上传目录的设定，com.jfinal.upload.MultipartRequest 111行
+    // rename规则 设定目录之后，会导致控制器里面获取到的不是正确的文件，故在此做修正
+    // 此处修订之后，jfinal中获取到的UploadFile中的uploadPath,fileName,originalFileName全都不可信
+    // 用户获取文件名需要拿到File然后读取fileName
     try {
       UploadedFile file = (UploadedFile)files.get(name);
-      return file.getFilesystemName();  // may be null
+      String fileDir = file.getDir()
+              .replace("\\", "/");
+      String upFileDir = fileDir.substring(saveDir.length());
+      return upFileDir + "/" + file.getFilesystemName();  // may be null
     }
     catch (Exception e) {
       return null;
@@ -423,20 +435,17 @@ public class MultipartRequest {
   public String getOriginalFileName(String name) {
     // L.cm 更改计划 2016-10-12
     // 将原来的FileName 改写成 相对tomcat的新路径 + 新文件名，方便处理;
-    // 1. 如果用户使用的是绝对路径 如 /home/www 时返回新文件名
+    // 1. 如果用户使用的是绝对路径 如 /home/www 时返回文件地址
     // 2. 如果用户是将文件传到服务器WebRoot下则返回相对于WebRoot的路径;
     try {
       UploadedFile file = (UploadedFile)files.get(name);
-      
       String dirPath = file.getDir();
       if (dirPath.startsWith(realPath)) {
         // 处理地址为相对目录
-        String fileDir = dirPath.substring(realPath.length())
-                  .replace("\\", "/");
-        
-        return fileDir + "/" + file.getFilesystemName();
+        dirPath = dirPath.substring(realPath.length());
       }
-      return file.getFilesystemName();  // may be null
+      dirPath = dirPath.replace("\\", "/");
+      return dirPath + "/" + file.getFilesystemName();  // may be null
     }
     catch (Exception e) {
       return null;

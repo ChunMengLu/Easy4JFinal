@@ -92,26 +92,26 @@ public abstract class EasyConfig extends JFinalConfig {
 
     @Override
     public void configPlugin(Plugins me) {
-        // 数据库信息
-        String url      = getProperty("db.default.url");
-        String user     = getProperty("db.default.user");
-        String password = getProperty("db.default.password");
-
-        // default 配置Druid数据库连接池插件
-        DruidPlugin druidPlugin = new DruidPlugin(url, user, password);
-        druidPlugin.addFilter(new StatFilter()).addFilter(new Log4j2Filter());
-        WallFilter wall = new WallFilter();
-        druidPlugin.addFilter(wall);
-        me.add(druidPlugin);
-
-        // default 配置ActiveRecord插件
-        ActiveRecordPlugin arp = new ActiveRecordPlugin("default", druidPlugin);
-
-        _MappingKit.mapping(arp);
-        this.mapping(arp);
-
-        arp.setShowSql(devMode);
-        me.add(arp);
+//        // 数据库信息
+//        String url      = getProperty("db.default.url");
+//        String user     = getProperty("db.default.user");
+//        String password = getProperty("db.default.password");
+//
+//        // default 配置Druid数据库连接池插件
+//        DruidPlugin druidPlugin = new DruidPlugin(url, user, password);
+//        druidPlugin.addFilter(new StatFilter()).addFilter(new Log4j2Filter());
+//        WallFilter wall = new WallFilter();
+//        druidPlugin.addFilter(wall);
+//        me.add(druidPlugin);
+//
+//        // default 配置ActiveRecord插件
+//        ActiveRecordPlugin arp = new ActiveRecordPlugin("default", druidPlugin);
+//
+//        _MappingKit.mapping(arp);
+//        this.mapping(arp);
+//
+//        arp.setShowSql(devMode);
+//        me.add(arp);
 
         // ehcahce插件配置
         me.add(new EhCachePlugin());

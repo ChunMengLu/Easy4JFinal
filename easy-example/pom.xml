@@ -60,7 +60,7 @@
 					<stopKey>stop</stopKey>
 					<scanIntervalSeconds>10</scanIntervalSeconds>
 					<webApp>
-						<contextPath>/</contextPath>
+						<contextPath></contextPath>
 					</webApp>
 					<!-- 适应测试阶段的jetty，日志写入目录，tomcat写入tomcat/logs下 -->
 					<systemProperties>
