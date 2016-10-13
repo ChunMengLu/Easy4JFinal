@@ -8,10 +8,8 @@ import com.jfinal.config.Handlers;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
-import com.jfinal.upload.OreillyCos;
 
 import net.dreamlu.easy.commons.config.EasyConfig;
-import net.dreamlu.easy.commons.upload.EasyFileRenamePolicy;
 import net.dreamlu.example.blog.BlogController;
 import net.dreamlu.example.index.IndexController;
 import net.dreamlu.example.model._MappingKit;
@@ -50,9 +48,6 @@ public class DemoConfig extends EasyConfig {
 
     @Override
 	public void onEasyStart() {
-        // 注意 以 / 开头表绝对路径 比如 /var/home/tomcat
-        String fileRenameXxx = "image/{yyyy}{mm}{dd}/{time}{rand:6}";
-        OreillyCos.setFileRenamePolicy(new EasyFileRenamePolicy(fileRenameXxx));
 	    TimeTaskTest.start();
 	}
 }

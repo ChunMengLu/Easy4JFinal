@@ -162,7 +162,6 @@ public class FilePart extends Part {
         if (policy != null) {
           file = policy.rename(file);
           fileName = file.getName();
-          filePath = file.getAbsolutePath();
         }
         fileOut = new BufferedOutputStream(new FileOutputStream(file));
         written = write(fileOut);
