@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -50,7 +51,18 @@ public class StrUtils {
     public static String getUUID () {
         return UUID.randomUUID().toString().replace("-", "");
     }
-
+    
+    /**
+     * 生成sql占位符 ?,?,?
+     * @param size
+     * @return ?,?,?
+     */
+    public static String sqlHolder(int size) {
+        String[] paras = new String[size];
+        Arrays.fill(paras, "?");
+        return StrUtils.join(paras, ",");
+    }
+    
      /**
      * 将字符串中特定模式的字符转换成map中对应的值
      * 

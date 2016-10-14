@@ -1,8 +1,6 @@
 package net.dreamlu.example.common;
 
 
-import org.beetl.ext.jfinal.BeetlRenderFactory;
-
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Plugins;
@@ -22,7 +20,7 @@ public class DemoConfig extends EasyConfig {
 
 	@Override
 	public void constant(Constants me) {
-        me.setMainRenderFactory(new BeetlRenderFactory());
+
 	}
 
 	@Override

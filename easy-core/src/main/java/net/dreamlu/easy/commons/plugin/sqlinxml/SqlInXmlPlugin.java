@@ -1,60 +1,54 @@
 package net.dreamlu.easy.commons.plugin.sqlinxml;
 
-import java.io.File;
-import java.util.ArrayList;
+import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.jfinal.kit.PathKit;
 import com.jfinal.plugin.IPlugin;
 
-import net.dreamlu.easy.commons.utils.FileUtils;
-import net.dreamlu.easy.commons.utils.SuffixFileFilter;
+import net.dreamlu.easy.commons.searcher.ResourceMatcherSearcher;
+import net.dreamlu.easy.commons.utils.ClassUtils;
+import net.dreamlu.easy.commons.utils.IOUtils;
 import net.dreamlu.easy.commons.utils.XmlHelper;
 
 /**
+ * 默认扫描classPath下的sqls目录
  * 参照JFinal-ext里面的插件名
- * @author Dreamlu
+ * @author L.cm
  */
 public class SqlInXmlPlugin implements IPlugin {
     private Map<String, String> sqlMap;
-    private String[] sqlPath;
+    private String[] sqlPkg;
     
     public SqlInXmlPlugin() {
-        this(new String[]{"sqls"}); //默认扫描classPath下的sqls目录
+        this(new String[]{"sqls"});
     }
     
-    public SqlInXmlPlugin(String... sqlPath) {
-        this.sqlPath = sqlPath;
+    public SqlInXmlPlugin(String... sqlPkg) {
+        this.sqlPkg = sqlPkg;
         sqlMap = new HashMap<String, String>();
     }
     
     @Override
     public boolean start() {
-        String classPath = PathKit.getRootClassPath();
-        if (null == sqlPath) {
-            throw new NullPointerException("sqlPath is null!");
+        if (null == sqlPkg) {
+            throw new NullPointerException("sqlPkgs is null!");
         }
-        List<File> xmlList = new ArrayList<File>();
-        SuffixFileFilter filter = new SuffixFileFilter(".xml");
+        // 查找sql.xml文件
+        Set<String> xmlSet = ResourceMatcherSearcher.getFiles(sqlPkg, "*sql.xml");
         
-        // is '/'; on Microsoft Windows systems it is '\\'.
-        for (String path : sqlPath) {
-            if (!path.startsWith("/") && !path.startsWith("\\")) {
-                path = File.separator + path;
-            }
-            String xmlDir = classPath + path; 
-            List<File> xmls = FileUtils.list(xmlDir, filter);
-            xmlList.addAll(xmls);
-        }
+        ClassLoader classLoader = ClassUtils.getClassLoader();
+        
         XmlHelper xmlHelper = null;
-        for (File file : xmlList) {
-            xmlHelper = XmlHelper.of(file);
+        for (String resource : xmlSet) {
+            InputStream is = classLoader.getResourceAsStream(resource);
+            xmlHelper = XmlHelper.of(is);
             parseSql(xmlHelper);
+            IOUtils.closeQuietly(is);
         }
         SqlKit.init(sqlMap);
         return true;
@@ -108,7 +102,7 @@ public class SqlInXmlPlugin implements IPlugin {
     public boolean stop() {
         sqlMap.clear();
         sqlMap = null;
-        sqlPath = null;
+        sqlPkg = null;
         return true;
     }
 

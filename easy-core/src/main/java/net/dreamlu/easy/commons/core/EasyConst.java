@@ -5,7 +5,7 @@ package net.dreamlu.easy.commons.core;
  * @author L.cm
  */
 public interface EasyConst {
-    String EASY4JFINAL_VERSION   = "2.3";
+    String EASY4JFINAL_VERSION   = "1.0";
     
     // 用户登陆cookie维持
     String APP_USER_KEY          = "EasyId";

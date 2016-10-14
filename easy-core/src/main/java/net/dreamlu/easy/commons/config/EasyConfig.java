@@ -22,13 +22,16 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.druid.DruidStatViewHandler;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
+import com.jfinal.upload.OreillyCos;
 
 import net.dreamlu.controller.UeditorApiController;
+import net.dreamlu.easy.commons.core.EasyConst;
 import net.dreamlu.easy.commons.interceptors.JsonExceptionInterceptor;
 import net.dreamlu.easy.commons.logs.Log4j2LogFactory;
 import net.dreamlu.easy.commons.logs.LogPrintStream;
 import net.dreamlu.easy.commons.servlet.ServletContextInterceptor;
 import net.dreamlu.easy.commons.session.SessionHandler;
+import net.dreamlu.easy.commons.upload.EasyFileRenamePolicy;
 import net.dreamlu.easy.commons.utils.WebUtils;
 import net.dreamlu.easy.core.CaptchaController;
 import net.dreamlu.easy.core.auth.AuthController;
@@ -48,13 +51,15 @@ public abstract class EasyConfig extends JFinalConfig {
     @Override
     public void configConstant(Constants me) {
         loadPropertyFile("application.properties");
-        devMode = getPropertyToBoolean("dev.devMode", false);
+        devMode = getPropertyToBoolean("app.devMode", false);
         
         me.setDevMode(devMode);
         // 默认Log4j2日志
         me.setLogFactory(new Log4j2LogFactory());
-        // 默认fastjson
+        // 默认fastJson
         me.setJsonFactory(new FastJsonFactory());
+        // 默认Beetl
+        me.setMainRenderFactory(new BeetlRenderFactory());
         ConfigParser.parser(prop, me);
     }
 
@@ -92,26 +97,26 @@ public abstract class EasyConfig extends JFinalConfig {
 
     @Override
     public void configPlugin(Plugins me) {
-//        // 数据库信息
-//        String url      = getProperty("db.default.url");
-//        String user     = getProperty("db.default.user");
-//        String password = getProperty("db.default.password");
-//
-//        // default 配置Druid数据库连接池插件
-//        DruidPlugin druidPlugin = new DruidPlugin(url, user, password);
-//        druidPlugin.addFilter(new StatFilter()).addFilter(new Log4j2Filter());
-//        WallFilter wall = new WallFilter();
-//        druidPlugin.addFilter(wall);
-//        me.add(druidPlugin);
-//
-//        // default 配置ActiveRecord插件
-//        ActiveRecordPlugin arp = new ActiveRecordPlugin("default", druidPlugin);
-//
-//        _MappingKit.mapping(arp);
-//        this.mapping(arp);
-//
-//        arp.setShowSql(devMode);
-//        me.add(arp);
+        // 数据库信息
+        String url      = getProperty("db.default.url");
+        String user     = getProperty("db.default.user");
+        String password = getProperty("db.default.password");
+
+        // default 配置Druid数据库连接池插件
+        DruidPlugin druidPlugin = new DruidPlugin(url, user, password);
+        druidPlugin.addFilter(new StatFilter()).addFilter(new Log4j2Filter());
+        WallFilter wall = new WallFilter();
+        druidPlugin.addFilter(wall);
+        me.add(druidPlugin);
+
+        // default 配置ActiveRecord插件
+        ActiveRecordPlugin arp = new ActiveRecordPlugin("default", druidPlugin);
+
+        _MappingKit.mapping(arp);
+        this.mapping(arp);
+
+        arp.setShowSql(devMode);
+        me.add(arp);
 
         // ehcahce插件配置
         me.add(new EhCachePlugin());
@@ -121,6 +126,12 @@ public abstract class EasyConfig extends JFinalConfig {
     @Override
     public void afterJFinalStart() {
         super.afterJFinalStart();
+        // 正式环境,将System.out、err输出到log中
+        if (!devMode) {
+            System.setOut(new LogPrintStream(false));
+            System.setErr(new LogPrintStream(true));
+        }
+        
         // ehCache session 管理
         EhcacheSessionConfig.init();
         
@@ -129,7 +140,7 @@ public abstract class EasyConfig extends JFinalConfig {
         String userSecret = getProperty("app.user.secret");
         WebUtils.setUserKey(userKey);
         WebUtils.setUserSecret(userSecret);
-
+        
         // 在JFinal启动时，加入启动时间 ${startTime}
         JFinal jfinal = JFinal.me();
         ServletContext servletContext = jfinal.getServletContext();
@@ -139,20 +150,18 @@ public abstract class EasyConfig extends JFinalConfig {
         servletContext.setAttribute("ctxPath", ctxPath);
         // 静态文件目录
         servletContext.setAttribute("stcPath", ctxPath + "/static");
-
+        
         // 注入sqls tag
         BeetlRenderFactory.groupTemplate.registerTag("sqls", SqlsTag.class);
-
-        // 正式环境,将System.out、err输出到log中
-        if (!devMode) {
-            System.setOut(new LogPrintStream(false));
-            System.setErr(new LogPrintStream(true));
-        }
-
+        
+        // 修改默认的重命名策略
+        OreillyCos.setFileRenamePolicy(new EasyFileRenamePolicy());
+        
         // 启动
         onEasyStart();
-        // showBanner
         
+        // showBanner，未来再做强化，支持自定义和彩色显示
+        showBanner();
     }
 
     public abstract void constant(Constants me);
@@ -161,4 +170,7 @@ public abstract class EasyConfig extends JFinalConfig {
     public abstract void plugin(Plugins plugins);
     public abstract void onEasyStart();
 
+    private void showBanner() {
+        System.err.println("Easy4JFinal " + EasyConst.EASY4JFINAL_VERSION + " started to complete~~~");
+    }
 }

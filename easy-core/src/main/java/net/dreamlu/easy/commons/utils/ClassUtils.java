@@ -11,6 +11,8 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
+import com.jfinal.kit.StrKit;
+
 /**
  * 类工具集
  * @author L.cm
@@ -71,10 +73,9 @@ public abstract class ClassUtils {
         }
         return classLoader;
     }
-
+    
     /**
-     * 获得class loader
-     * 若当前线程class loader不存在，取当前类的class loader
+     * 获得class loader，参考spring mvc
      * @return 类加载器
      */
     public static ClassLoader getClassLoader() {
@@ -95,9 +96,9 @@ public abstract class ClassUtils {
     }
     
     /**
-     * 加载类
+     * 加载类，参考SPring mvc
      * @param className 类名
-     * @return Class
+     * @return Class集合
      */
     public static Class<?> loadClass(String className) {
         if (className == null) {
@@ -120,13 +121,13 @@ public abstract class ClassUtils {
         return null;
     }
     
-    public static final String EXT_CLASS_LOADER_NAME = "sun.misc.Launcher$ExtClassLoader";
+    private static final String EXT_CLASS_LOADER_NAME = "sun.misc.Launcher$ExtClassLoader";
     
     /**
      * 本段代码来自jetbrick-template-1x
      * 根据 classLoader 获取所有的 Classpath URLs.
      */
-    public static Collection<URL> getClasspathURLs(final ClassLoader classLoader) {
+    private static Collection<URL> getClasspathURLs(final ClassLoader classLoader) {
         Collection<URL> urls = new LinkedHashSet<URL>(32);
         ClassLoader loader = classLoader;
         while (loader != null) {
@@ -157,7 +158,7 @@ public abstract class ClassUtils {
             }
             loader = loader.getParent();
         }
-
+        
         String classpath = System.getProperty("java.class.path");
         if (classpath.length() > 1) {
             String[] paths = StrUtils.split(classpath, File.pathSeparatorChar);
@@ -169,7 +170,7 @@ public abstract class ClassUtils {
                 }
             }
         }
-
+        
         // 添加包含所有的 META-INF/MANIFEST.MF 的 jar 文件
         try {
             Enumeration<URL> paths = classLoader.getResources("META-INF/MANIFEST.MF");
@@ -181,7 +182,7 @@ public abstract class ClassUtils {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
+        
         // 删除 jdk 自带的 jar
         Iterator<URL> it = urls.iterator();
         while (it.hasNext()) {
@@ -190,14 +191,15 @@ public abstract class ClassUtils {
                 it.remove();
             }
         }
-
+        
         return urls;
     }
     
     /**
+     * 本段代码来自jetbrick-template-1x
      * 根据 classLoader 获取指定 package 对应的 URLs.
      */
-    public static Collection<URL> getClasspathURLs(ClassLoader classLoader, String packageName) {
+    private static Collection<URL> getClasspathURLs(ClassLoader classLoader, String packageName) {
         if (packageName == null) {
             throw new IllegalArgumentException("PackageName must be not null.");
         }
@@ -212,6 +214,19 @@ public abstract class ClassUtils {
             throw new RuntimeException(e);
         }
         return urls;
+    }
+    
+    /**
+     * 根据 packageName 获取指定 package 对应的 URLs.
+     * @param packageName 包名
+     * @return URLs
+     */
+    public static Collection<URL> getClasspathURLs(String packageName) {
+        ClassLoader classLoader = ClassUtils.getClassLoader();
+        if (StrKit.isBlank(packageName)) {
+            return ClassUtils.getClasspathURLs(classLoader);
+        }
+        return ClassUtils.getClasspathURLs(classLoader, packageName);
     }
 
 }
