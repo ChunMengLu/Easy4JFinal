@@ -1,16 +1,12 @@
 package net.dreamlu.easy.commons.config;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Properties;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 import com.jfinal.config.Constants;
-import com.jfinal.core.JFinal;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.StrKit;
-import com.jfinal.render.ViewType;
+
+import net.dreamlu.easy.commons.core.EasyConst;
+import net.dreamlu.easy.commons.session.EhcacheSessionManager;
+import net.dreamlu.easy.commons.session.RedisSessionManager;
 
 /**
  * 参数转换处理
@@ -22,71 +18,74 @@ class ConfigParser {
      * 该部分代码太多生硬
      */
     public static void parser(Prop prop, Constants me) {
-        // 第一步对 key 按照前缀排序，将属性写到TreeMap
-        Properties props = prop.getProperties();
-        SortedMap<String, String> propMap = new TreeMap<String, String>();
-        for (Object object : props.keySet()) {
-            String key = (String) object;
-            propMap.put(key, prop.get(key));
-        }
-        
-        String encoding     = prop.get("app.encoding", "UTF-8");
-        Integer maxPostSize = prop.getInt("app.max-post-size");
-        
-        String viewType     = prop.get("view.type");
-        String viewPrefix   = prop.get("view.prefix");
-        
-        String baseDownloadPath = prop.get("base.download-path");
-        String baseUploadPath   = prop.get("base.upload-path");
-        
-        String jsonDatePattern  = prop.get("json.date-pattern");
-        
+        String encoding = prop.get("app.encoding");
         if (StrKit.notBlank(encoding)) {
             me.setEncoding(encoding);
         }
-        if (StrKit.notBlank(viewType)) {
-            viewType = viewType.toUpperCase();
-            if ("beetl".equalsIgnoreCase(viewType)) {
-                me.setMainRenderFactory(new org.beetl.ext.jfinal.BeetlRenderFactory());
-                if (StrKit.notBlank(viewPrefix)) {
-                    org.beetl.core.Configuration config = org.beetl.ext.jfinal.BeetlRenderFactory.groupTemplate.getConf();
-                    Map<String, String> res = config.getResourceMap();
-                    res.put("root", viewPrefix);
-                }
-            } else {
-                if (StrKit.notBlank(viewPrefix)) {
-                    me.setBaseViewPath(viewPrefix);
-                }
-                me.setViewType(ViewType.valueOf(viewType));
-            }
-        }
-        
-        if (null != maxPostSize) {
+        Integer maxPostSize = prop.getInt("app.max-post-size");
+        if (null != maxPostSize && maxPostSize > 0) {
             me.setMaxPostSize(maxPostSize);
         }
+        // 暂时不解析这2个字段
+//        String viewType     = prop.get("view.type");
+//        String viewPrefix   = prop.get("view.prefix");
         
+        String baseDownloadPath = prop.get("base.download-path");
+        String baseUploadPath   = prop.get("base.upload-path");
+        String jsonDatePattern  = prop.get("json.date-pattern");
         if (StrKit.notBlank(baseDownloadPath)) {
             me.setBaseDownloadPath(baseDownloadPath);
         }
-        
         if (StrKit.notBlank(baseUploadPath)) {
             me.setBaseUploadPath(baseUploadPath);
         }
-        
         if (StrKit.notBlank(jsonDatePattern)) {
             me.setJsonDatePattern(jsonDatePattern);
         }
+        
+        EasyConstants easyConst = EasyConstants.me;
         String userKey    = prop.get("user.key");
         String userSecret = prop.get("user.secret");
+        if (StrKit.notBlank(userKey)) {
+            easyConst.setUserKey(userKey);
+        }
+        if (StrKit.notBlank(userSecret)) {
+            easyConst.setUserSecret(userSecret);
+        }
         
         String devUrlPrefix = prop.get("dev.urlPrefix");
         String devDir = prop.get("dev.devDir");
+        if (StrKit.notBlank(devUrlPrefix)) {
+            easyConst.setDevUrlPrefix(devUrlPrefix);
+        }
+        if (StrKit.notBlank(devDir)) {
+            easyConst.setDevDir(devDir);
+        }
         
-        int sessionTimeout = prop.getInt("session.timeout", 30);
-        String sessionCookieName = prop.get("session.cookie.name", "easy_session");
-        String sessionCookieDomain = prop.get(" session.cookie.domain");
-        
-        EasyConstants easyConst = EasyConstants.me;
+        boolean sessionEnable = prop.getBoolean("session.enable", EasyConst.SESSION_ENABLE);
+        if (sessionEnable) {
+            easyConst.setSessionEnable(sessionEnable);
+        }
+        String sessionManager = prop.get("session.manager");
+        if (StrKit.notBlank(sessionManager)) {
+            if (sessionManager.equalsIgnoreCase("ehcache")) {
+                easyConst.setSessionManager(new EhcacheSessionManager());
+            } else if (sessionManager.equalsIgnoreCase("redis")) {
+                easyConst.setSessionManager(new RedisSessionManager());
+            }
+        }
+        Integer sessionTimeout = prop.getInt("session.timeout");
+        if (null != sessionTimeout) {
+            easyConst.setSessionTimeout(sessionTimeout);
+        }
+        String sessionCookieName = prop.get("session.cookie.name");
+        if (StrKit.notBlank(sessionCookieName)) {
+            easyConst.setSessionCookieName(sessionCookieName);
+        }
+        String sessionCookieDomain = prop.get("session.cookie.domain");
+        if (StrKit.notBlank(sessionCookieDomain)) {
+            easyConst.setSessionCookieDomain(sessionCookieDomain);
+        }
     }
     
 }

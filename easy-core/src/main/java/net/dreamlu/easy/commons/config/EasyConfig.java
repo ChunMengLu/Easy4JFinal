@@ -52,8 +52,8 @@ public abstract class EasyConfig extends JFinalConfig {
     public void configConstant(Constants me) {
         loadPropertyFile("application.properties");
         devMode = getPropertyToBoolean("app.devMode", false);
-        
         me.setDevMode(devMode);
+        
         // 默认Log4j2日志
         me.setLogFactory(new Log4j2LogFactory());
         // 默认fastJson

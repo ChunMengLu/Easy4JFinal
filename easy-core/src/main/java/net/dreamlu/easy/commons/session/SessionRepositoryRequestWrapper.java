@@ -14,7 +14,7 @@ import net.dreamlu.easy.commons.config.EasyConstants;
 import net.dreamlu.easy.commons.utils.WebUtils;
 
 public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
-    private static SessionManager sessionManager = EasyConstants.getSessionManager();
+    private static SessionManager sessionManager = EasyConstants.me.getSessionManager();
     
     private final HttpServletResponse response;
     private final String sessionDomain;
@@ -22,8 +22,6 @@ public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
     public SessionRepositoryRequestWrapper(HttpServletRequest request, HttpServletResponse response) {
         super(request);
         this.response = response;
-       
-        JFinal.me().getServletContext().getSessionCookieConfig();
         
         String serverName = request.getServerName();
         int index = serverName.indexOf('.');
@@ -40,8 +38,8 @@ public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
     
     private String getSessionId() {
         HttpServletRequest request = getHttpRequest();
-        String appUserKey = EasyConstants.me.getAppUserKey();
-        return WebUtils.getCookie(request, appUserKey);
+        String cookieName = EasyConstants.me.getSessionCookieName();
+        return WebUtils.getCookie(request, cookieName);
     }
     
     /**
@@ -57,10 +55,10 @@ public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
         String sessionId = getRequestedSessionId();
         // 默认getSession(true)
         if (null == sessionId) {
-            String appUserKey = EasyConstants.me.getAppUserKey();
+            String cookieName = EasyConstants.me.getSessionCookieName();
             int maxAgeInSeconds = EasyConstants.me.getSessionTimeout() * 60;
             sessionId = UUID.randomUUID().toString();
-            WebUtils.setCookie(response, appUserKey, sessionId, maxAgeInSeconds);
+            WebUtils.setCookie(response, cookieName, sessionId, maxAgeInSeconds);
         }
         EasySession session = sessionManager.get(sessionId);
         if (null == session) {

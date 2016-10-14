@@ -1,7 +1,6 @@
 package net.dreamlu.easy.commons.config;
 
 import net.dreamlu.easy.commons.core.EasyConst;
-import net.dreamlu.easy.commons.session.EhcacheSessionManager;
 import net.dreamlu.easy.commons.session.SessionManager;
 
 /**
@@ -9,44 +8,51 @@ import net.dreamlu.easy.commons.session.SessionManager;
  * @author L.cm
  */
 public final class EasyConstants {
-    private String appUserKey          = EasyConst.APP_USER_KEY;
-    private String appUserSecret       = EasyConst.APP_USER_SECRET;
-    private String appDevUrlPrefix     = EasyConst.APP_DEV_URL_PREFIX;
-    private String appDevDir           = EasyConst.APP_DEV_DIR;
+    private String userKey              = EasyConst.APP_USER_KEY;
+    private String userSecret           = EasyConst.APP_USER_SECRET;
+    private String devUrlPrefix         = EasyConst.APP_DEV_URL_PREFIX;
+    private String devDir               = EasyConst.APP_DEV_DIR;
 
-    private int sessionTimeout         = EasyConst.SESSION_TIMEOUT;
-    private String sessionCookieName   = EasyConst.SESSION_COOKIE_NAME;
-    private String sessionCookieDomain = null;
+    private int sessionTimeout          = EasyConst.SESSION_TIMEOUT;
+    private boolean sessionEnable       = EasyConst.SESSION_ENABLE;
+    private String sessionCookieName    = EasyConst.SESSION_COOKIE_NAME;
+    private String sessionCookieDomain  = null;
     
-    private static SessionManager sessionManager = new EhcacheSessionManager();
+    private SessionManager sessionManager = null;
     
     public static final EasyConstants me = new EasyConstants();
     
     private EasyConstants() {}
     
-    public String getAppUserKey() {
-        return appUserKey;
+    public String getUserKey() {
+        return userKey;
     }
-    public void setAppUserKey(String appUserKey) {
-        this.appUserKey = appUserKey;
+    public void setUserKey(String userKey) {
+        this.userKey = userKey;
     }
-    public String getAppUserSecret() {
-        return appUserSecret;
+    public String getUserSecret() {
+        return userSecret;
     }
-    public void setAppUserSecret(String appUserSecret) {
-        this.appUserSecret = appUserSecret;
+    public void setUserSecret(String userSecret) {
+        this.userSecret = userSecret;
     }
-    public String getAppDevUrlPrefix() {
-        return appDevUrlPrefix;
+    public String getDevUrlPrefix() {
+        return devUrlPrefix;
     }
-    public void setAppDevUrlPrefix(String appDevUrlPrefix) {
-        this.appDevUrlPrefix = appDevUrlPrefix;
+    public void setDevUrlPrefix(String devUrlPrefix) {
+        this.devUrlPrefix = devUrlPrefix;
     }
-    public String getAppDevDir() {
-        return appDevDir;
+    public String getDevDir() {
+        return devDir;
     }
-    public void setAppDevDir(String appDevDir) {
-        this.appDevDir = appDevDir;
+    public void setDevDir(String devDir) {
+        this.devDir = devDir;
+    }
+    public boolean isSessionEnable() {
+        return sessionEnable;
+    }
+    public void setSessionEnable(boolean sessionEnable) {
+        this.sessionEnable = sessionEnable;
     }
     public int getSessionTimeout() {
         return sessionTimeout;
@@ -66,8 +72,11 @@ public final class EasyConstants {
     public void setSessionCookieDomain(String sessionCookieDomain) {
         this.sessionCookieDomain = sessionCookieDomain;
     }
-    public static SessionManager getSessionManager() {
+    public SessionManager getSessionManager() {
         return sessionManager;
+    }
+    public void setSessionManager(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
     }
     
 }
