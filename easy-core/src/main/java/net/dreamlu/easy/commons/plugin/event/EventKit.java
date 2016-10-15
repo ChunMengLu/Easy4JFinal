@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 
 import net.dreamlu.easy.commons.plugin.event.core.ApplicationEvent;
-import net.dreamlu.easy.commons.utils.ArrayListMultimap;
+import net.dreamlu.easy.commons.utils.LinkedMultiMap;
 
 /**
  * 事件工具类
@@ -14,10 +14,10 @@ import net.dreamlu.easy.commons.utils.ArrayListMultimap;
  * date 2015年4月26日下午9:58:53
  */
 public class EventKit {
-	private static ArrayListMultimap<EventType, ListenerHelper> map;
+	private static LinkedMultiMap<EventType, ListenerHelper> map;
 	private static ExecutorService pool;
 
-	static void init(ArrayListMultimap<EventType, ListenerHelper> map, ExecutorService pool) {
+	static void init(LinkedMultiMap<EventType, ListenerHelper> map, ExecutorService pool) {
 		EventKit.map = map;
 		EventKit.pool = pool;
 	}

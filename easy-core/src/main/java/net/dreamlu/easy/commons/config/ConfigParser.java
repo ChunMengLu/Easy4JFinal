@@ -17,7 +17,7 @@ class ConfigParser {
     /**
      * 该部分代码太多生硬
      */
-    public static void parser(Prop prop, Constants me) {
+    public static void parser(Prop prop, Constants me, EasyConstants easyConst) {
         String encoding = prop.get("app.encoding");
         if (StrKit.notBlank(encoding)) {
             me.setEncoding(encoding);
@@ -43,7 +43,6 @@ class ConfigParser {
             me.setJsonDatePattern(jsonDatePattern);
         }
         
-        EasyConstants easyConst = EasyConstants.me;
         String userKey    = prop.get("user.key");
         String userSecret = prop.get("user.secret");
         if (StrKit.notBlank(userKey)) {

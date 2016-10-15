@@ -16,8 +16,8 @@ import com.jfinal.plugin.IPlugin;
 import net.dreamlu.easy.commons.plugin.event.core.ApplicationListener;
 import net.dreamlu.easy.commons.plugin.event.core.Listener;
 import net.dreamlu.easy.commons.searcher.ClassSearcher;
-import net.dreamlu.easy.commons.utils.ArrayListMultimap;
 import net.dreamlu.easy.commons.utils.ClassUtils;
+import net.dreamlu.easy.commons.utils.LinkedMultiMap;
 
 /**
  * 模拟spring的消息机制插件
@@ -33,7 +33,7 @@ public class EventPlugin implements IPlugin {
     // 线程池
     private static ExecutorService pool = null;
     // 重复key的map，使用监听的type，取出所有的监听器
-    private static ArrayListMultimap<EventType, ListenerHelper> map = null;
+    private static LinkedMultiMap<EventType, ListenerHelper> map = null;
 
     // 默认扫描所有的包
     private final String[] scanPackage;
@@ -112,7 +112,7 @@ public class EventPlugin implements IPlugin {
         sortListeners(allListeners);
 
         // 重复key的map，使用监听的type，取出所有的监听器
-        map = new ArrayListMultimap<EventType, ListenerHelper>();
+        map = new LinkedMultiMap<EventType, ListenerHelper>();
 
         Type type;
         ApplicationListener listener;

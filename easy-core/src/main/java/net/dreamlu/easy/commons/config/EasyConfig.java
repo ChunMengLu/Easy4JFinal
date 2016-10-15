@@ -47,6 +47,7 @@ import net.dreamlu.easy.ui.beetl.SqlsTag;
 public abstract class EasyConfig extends JFinalConfig {
     // 开发模式
     private boolean devMode = false;
+    private EasyConstants easyConst = EasyConstants.me;
 
     @Override
     public void configConstant(Constants me) {
@@ -60,7 +61,7 @@ public abstract class EasyConfig extends JFinalConfig {
         me.setJsonFactory(new FastJsonFactory());
         // 默认Beetl
         me.setMainRenderFactory(new BeetlRenderFactory());
-        ConfigParser.parser(prop, me);
+        ConfigParser.parser(prop, me, easyConst);
     }
 
     @Override
@@ -84,7 +85,9 @@ public abstract class EasyConfig extends JFinalConfig {
         me.add(new UrlSkipHandler("/static", false));
         me.add(new DruidStatViewHandler("/admin/druid"));
         me.add(new SessionIdHandler());
-        me.add(new SessionHandler());
+        if (easyConst.isSessionEnable()) {
+            me.add(new SessionHandler());
+        }
     }
 
     @Override
