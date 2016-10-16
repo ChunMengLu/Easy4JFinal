@@ -8,18 +8,18 @@ import java.io.Serializable;
  * 文件后缀过滤
  * @author L.cm
  */
-public class SuffixFileFilter implements FilenameFilter, Serializable{
+public class FileMatcherFilter implements FilenameFilter, Serializable{
     private static final long serialVersionUID = 812598009067554612L;
     
-    private String suffix;
+    private final String pattern;
     
-    public SuffixFileFilter(String suffix) {
-        this.suffix = suffix;
+    public FileMatcherFilter(String pattern) {
+        this.pattern = pattern;
     }
     
     @Override
     public boolean accept(File dir, String name) {
-        return name.endsWith(suffix);
+        return Matcher.matchName(name, pattern);
     }
     
 }
