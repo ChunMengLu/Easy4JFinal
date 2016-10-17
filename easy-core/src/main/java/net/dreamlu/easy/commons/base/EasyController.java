@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jfinal.core.Controller;
+import com.jfinal.json.Json;
+import com.jfinal.kit.HttpKit;
 import com.jfinal.kit.StrKit;
 import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.Page;
@@ -48,6 +50,27 @@ public class EasyController extends Controller {
     public void logout() {
         WebUtils.logoutUser(this);
     }
+
+    /**
+     * 获取post的结构体
+     * @return json or xml字符串
+     */
+    public String getReqBody() {
+        return HttpKit.readData(getRequest());
+    }
+
+    /**
+     * 将post的json结构体转成Bean
+     * @param clazz 类
+     * @return Bean
+     */
+    public <T> T getJsonReqBody(Class<T> clazz) {
+        String jsonString = getReqBody();
+        if (StrKit.isBlank(jsonString)) {
+            return null;
+        }
+        return Json.getJson().parse(jsonString, clazz);
+    } 
 
     /**
      * 获取多个model

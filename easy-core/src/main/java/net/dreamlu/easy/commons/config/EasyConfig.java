@@ -76,13 +76,10 @@ public abstract class EasyConfig extends JFinalConfig {
     public void configHandler(Handlers me) {
         if (devMode) {
             me.add(new RenderingTimeHandler());
-            // 路由的开始部分
-            String urlPrefix = getProperty("app.dev.urlPrefix", "/_dev");
-            // 前端开发的模版目录
-            String devDir    = getProperty("app.dev.devDir", "_dev");
-            me.add(new ViewDevHandler(urlPrefix, devDir));
+            me.add(new ViewDevHandler(easyConst.getDevUrlPrefix(), easyConst.getDevDir()));
         }
         me.add(new UrlSkipHandler("/static", false));
+        me.add(new UrlSkipHandler("/ws", false));
         me.add(new DruidStatViewHandler("/admin/druid"));
         me.add(new SessionIdHandler());
         if (easyConst.isSessionEnable()) {
@@ -128,21 +125,15 @@ public abstract class EasyConfig extends JFinalConfig {
 
     @Override
     public void afterJFinalStart() {
-        super.afterJFinalStart();
         // 正式环境,将System.out、err输出到log中
         if (!devMode) {
             System.setOut(new LogPrintStream(false));
             System.setErr(new LogPrintStream(true));
         }
         
-        // ehCache session 管理
-        EhcacheSessionConfig.init();
-        
         // 用户登陆是使用的cookie name和密钥
-        String userKey    = getProperty("app.user.key");
-        String userSecret = getProperty("app.user.secret");
-        WebUtils.setUserKey(userKey);
-        WebUtils.setUserSecret(userSecret);
+        WebUtils.setUserKey(easyConst.getUserKey());
+        WebUtils.setUserSecret(easyConst.getUserSecret());
         
         // 在JFinal启动时，加入启动时间 ${startTime}
         JFinal jfinal = JFinal.me();

@@ -5,7 +5,6 @@ import com.jfinal.kit.Prop;
 import com.jfinal.kit.StrKit;
 
 import net.dreamlu.easy.commons.core.EasyConst;
-import net.dreamlu.easy.commons.session.EhcacheSessionManager;
 import net.dreamlu.easy.commons.session.RedisSessionManager;
 
 /**
@@ -67,9 +66,7 @@ class ConfigParser {
         }
         String sessionManager = prop.get("session.manager");
         if (StrKit.notBlank(sessionManager)) {
-            if (sessionManager.equalsIgnoreCase("ehcache")) {
-                easyConst.setSessionManager(new EhcacheSessionManager());
-            } else if (sessionManager.equalsIgnoreCase("redis")) {
+            if (sessionManager.equalsIgnoreCase("redis")) {
                 easyConst.setSessionManager(new RedisSessionManager());
             }
         }

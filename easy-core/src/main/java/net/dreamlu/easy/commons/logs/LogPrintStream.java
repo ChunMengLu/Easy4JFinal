@@ -9,7 +9,7 @@ import com.jfinal.log.Log;
  * Created by L.cm on 2016/7/13.
  */
 public class LogPrintStream extends PrintStream {
-    private final Log log = Log.getLog("System.out");
+    private final Log log = Log.getLog("System.out:");
 
     private final boolean error;
 
