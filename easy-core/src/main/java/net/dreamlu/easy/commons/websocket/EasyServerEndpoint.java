@@ -61,7 +61,7 @@ public class EasyServerEndpoint {
     }
     
     @OnError
-    public void error(Session session, @PathParam("msgId") String msgId, Throwable t) {
+    public void error(Session session, Throwable t) {
         WebSocketKit.send(session, new WsMessage(t.getMessage()));
         logger.error(t.getMessage(), t);
     }

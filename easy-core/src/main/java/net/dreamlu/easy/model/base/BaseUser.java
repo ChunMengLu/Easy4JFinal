@@ -50,6 +50,14 @@ public abstract class BaseUser<M extends BaseUser<M>> extends EasyModel<M> imple
 		return get("pwd");
 	}
 
+	public java.lang.String getSalt() {
+		return get("salt");
+	}
+
+	public void setSalt(java.lang.String salt) {
+		set("salt", salt);
+	}
+
 	public void setRealName(java.lang.String realName) {
 		set("realName", realName);
 	}

@@ -53,8 +53,8 @@ public class User extends BaseUser<User> {
 	}
 
 	// 用户登录
-	public User findLogin(String email, String pwd){
-		return this.findFirst("select * from user where email = ? and password = ? and email_verify = 1 and del_status = 0 limit 1", email, pwd);
+	public User findByEmail(String email){
+		return this.findFirst("select * from user where email = ? and email_verify = 1 and del_status = 0 limit 1", email);
 	}
 
 }
