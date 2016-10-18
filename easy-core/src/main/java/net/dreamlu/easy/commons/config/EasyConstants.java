@@ -1,5 +1,7 @@
 package net.dreamlu.easy.commons.config;
 
+import com.jfinal.kit.StrKit;
+
 import net.dreamlu.easy.commons.core.EasyConst;
 import net.dreamlu.easy.commons.session.SessionManager;
 
@@ -19,8 +21,11 @@ public final class EasyConstants {
     private String sessionRedisName     = EasyConst.SESSION_REDIS_NAME;
     private String sessionCookieName    = EasyConst.SESSION_COOKIE_NAME;
     private String sessionCookieDomain  = null;
+    private String xmlSqlPkg            = null;
+    private String eventPkg             = null;
     
     private SessionManager sessionManager = null;
+    
     
     public static final EasyConstants me = new EasyConstants();
     
@@ -80,5 +85,21 @@ public final class EasyConstants {
     public void setSessionManager(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
     }
-    
+
+    public String getXmlSqlPkg() {
+        return xmlSqlPkg;
+    }
+
+    public void setXmlSqlPkg(String xmlSqlPkg) {
+        this.xmlSqlPkg = xmlSqlPkg;
+    }
+
+    public String getEventPkg() {
+        return eventPkg;
+    }
+
+    public void setEventPkg(String eventPkg) {
+        this.eventPkg = eventPkg;
+    }
+
 }

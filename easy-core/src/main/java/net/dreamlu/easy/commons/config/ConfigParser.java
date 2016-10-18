@@ -3,6 +3,7 @@ package net.dreamlu.easy.commons.config;
 import com.jfinal.config.Constants;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.StrKit;
+import com.jfinal.plugin.activerecord.Sqls;
 
 import net.dreamlu.easy.commons.core.EasyConst;
 import net.dreamlu.easy.commons.session.RedisSessionManager;
@@ -83,11 +84,18 @@ class ConfigParser {
             easyConst.setSessionCookieDomain(sessionCookieDomain);
         }
         
-//        scan.xmlsql.pkg:sqls;net.dreamlu
-//        scan.event.pkg:net.dreamlu
-//
-//        ## sqls
-//        sqls.name:sqls/sql.txt
+        String xmlSqlPkg = prop.get("scan.xmlsql.pkg");
+        if (StrKit.notBlank(xmlSqlPkg)) {
+            easyConst.setXmlSqlPkg(xmlSqlPkg);
+        }
+        String eventPkg = prop.get("scan.event.pkg");
+        if (StrKit.notBlank(xmlSqlPkg)) {
+            easyConst.setEventPkg(eventPkg);
+        }
+        String sqlsFile = prop.get("sqls.file");
+        if (StrKit.notBlank(sqlsFile)) {
+            Sqls.load(sqlsFile);
+        }
     }
     
 }
