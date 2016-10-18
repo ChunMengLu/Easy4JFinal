@@ -8,13 +8,15 @@ import net.dreamlu.easy.commons.session.SessionManager;
  * @author L.cm
  */
 public final class EasyConstants {
-    private String userKey              = EasyConst.APP_USER_KEY;
-    private String userSecret           = EasyConst.APP_USER_SECRET;
-    private String devUrlPrefix         = EasyConst.APP_DEV_URL_PREFIX;
-    private String devDir               = EasyConst.APP_DEV_DIR;
+    private String userKey              = EasyConst.USER_KEY;
+    private String userSecret           = EasyConst.USER_SECRET;
+    private String devUrlPrefix         = EasyConst.DEV_URL_PREFIX;
+    private String devDir               = EasyConst.DEV_DIR;
 
     private int sessionTimeout          = EasyConst.SESSION_TIMEOUT;
     private boolean sessionEnable       = EasyConst.SESSION_ENABLE;
+    private String sessionManagerName   = EasyConst.SESSION_MANAGER;
+    private String sessionRedisName     = EasyConst.SESSION_REDIS_NAME;
     private String sessionCookieName    = EasyConst.SESSION_COOKIE_NAME;
     private String sessionCookieDomain  = null;
     

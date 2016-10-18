@@ -14,6 +14,7 @@ import com.jfinal.render.JsonRender;
 
 import net.dreamlu.easy.commons.result.DataTables;
 import net.dreamlu.easy.commons.utils.WebUtils;
+import net.dreamlu.easy.commons.websocket.WebSocketKit;
 import net.dreamlu.easy.model.User;
 
 /**
@@ -59,6 +60,18 @@ public class EasyController extends Controller {
         return HttpKit.readData(getRequest());
     }
 
+    /**
+     * 设置WebSocket的消息Id，为加密的用户Id
+     */
+    public void setWebSocketMsgId() {
+    	Integer userId = getCurrentUserId();
+    	if (userId == null) {
+    		throw new RuntimeException("userId is null!");
+    	}
+    	String msgId = WebSocketKit.getMsgId(userId + "");
+    	setAttr("msgId", msgId);
+    }
+    
     /**
      * 将post的json结构体转成Bean
      * @param clazz 类

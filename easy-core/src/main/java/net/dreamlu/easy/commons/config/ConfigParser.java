@@ -82,6 +82,12 @@ class ConfigParser {
         if (StrKit.notBlank(sessionCookieDomain)) {
             easyConst.setSessionCookieDomain(sessionCookieDomain);
         }
+        
+//        scan.xmlsql.pkg:sqls;net.dreamlu
+//        scan.event.pkg:net.dreamlu
+//
+//        ## sqls
+//        sqls.name:sqls/sql.txt
     }
     
 }

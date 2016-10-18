@@ -265,7 +265,7 @@ public final class WebUtils {
 		if (StrKit.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getRemoteAddr();
 		}
-		return StrKit.notBlank(ip) ? ip.split(",")[0] : null;
+		return StrKit.isBlank(ip) ? null : ip.split(",")[0];
 	}
 
 }
