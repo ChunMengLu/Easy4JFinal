@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +16,12 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -206,12 +215,60 @@ public class XmlHelper {
         return params;
     }
 
-    private static DocumentBuilderFactory getDocumentBuilderFactory(){
-        return XmlHelperHolder.documentBuilderFactory;
+    /**
+     * 用于改写xml文件输出
+     * @param out 输出流
+     */
+    public void outXML(OutputStream out) {
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(new OutputStreamWriter(out, Charsets.UTF_8));
+            StreamResult result = new StreamResult(writer);
+            outXML(result);
+        } catch (TransformerException e) {
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(writer);
+        }
     }
 
+    /**
+     * 用于输出改写之后的xml
+     * @param result 输出
+     * @throws TransformerException 
+     */
+    private void outXML(StreamResult result) throws TransformerException {
+        DOMSource source = new DOMSource(doc);
+        Transformer transformer = getTransFactory().newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        // 格式化为4个空格
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+        transformer.transform(source, result);
+    }
+
+    /**
+     * document构建工厂
+     * @return DocumentBuilderFactory
+     */
+    private static DocumentBuilderFactory getDocumentBuilderFactory(){
+        return XmlHelper.XmlHelperHolder.documentBuilderFactory;
+    }
+
+    /**
+     * xPath工厂
+     * @return XPathFactory
+     */
     private static XPathFactory getXPathFactory() {
-        return  XmlHelperHolder.xPathFactory;
+        return  XmlHelper.XmlHelperHolder.xPathFactory;
+    }
+
+    /**
+     * 转换工厂
+     * @return TransformerFactory
+     */
+    private static TransformerFactory getTransFactory() {
+        return  XmlHelper.XmlHelperHolder.transFactory;
     }
 
     /**
@@ -220,6 +277,7 @@ public class XmlHelper {
     private static class XmlHelperHolder {
         private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         private static XPathFactory xPathFactory = XPathFactory.newInstance();
+        private static TransformerFactory transFactory = TransformerFactory.newInstance();
     }
 
 }
