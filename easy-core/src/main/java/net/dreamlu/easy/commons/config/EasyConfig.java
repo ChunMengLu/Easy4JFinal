@@ -18,6 +18,7 @@ import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
 import com.jfinal.ext.handler.UrlSkipHandler;
 import com.jfinal.json.FastJsonFactory;
+import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.druid.DruidStatViewHandler;
@@ -29,6 +30,8 @@ import net.dreamlu.easy.commons.core.EasyConst;
 import net.dreamlu.easy.commons.interceptors.JsonExceptionInterceptor;
 import net.dreamlu.easy.commons.logs.Log4j2LogFactory;
 import net.dreamlu.easy.commons.logs.LogPrintStream;
+import net.dreamlu.easy.commons.plugin.event.EventPlugin;
+import net.dreamlu.easy.commons.plugin.sqlinxml.SqlInXmlPlugin;
 import net.dreamlu.easy.commons.servlet.ServletContextInterceptor;
 import net.dreamlu.easy.commons.session.SessionHandler;
 import net.dreamlu.easy.commons.upload.EasyFileRenamePolicy;
@@ -101,25 +104,35 @@ public abstract class EasyConfig extends JFinalConfig {
         String url      = getProperty("db.default.url");
         String user     = getProperty("db.default.user");
         String password = getProperty("db.default.password");
-
+        
         // default 配置Druid数据库连接池插件
         DruidPlugin druidPlugin = new DruidPlugin(url, user, password);
         druidPlugin.addFilter(new StatFilter()).addFilter(new Log4j2Filter());
         WallFilter wall = new WallFilter();
         druidPlugin.addFilter(wall);
         me.add(druidPlugin);
-
+        
         // default 配置ActiveRecord插件
         ActiveRecordPlugin arp = new ActiveRecordPlugin("default", druidPlugin);
-
+        
         _MappingKit.mapping(arp);
         this.mapping(arp);
-
+        
         arp.setShowSql(devMode);
         me.add(arp);
-
+        
         // ehcahce插件配置
         me.add(new EhCachePlugin());
+        
+        String eventPkg = easyConst.getEventPkg();
+        if (StrKit.notBlank(eventPkg)) {
+            me.add(new EventPlugin(eventPkg.split(";")));
+        }
+        String xmlSqlPkg = easyConst.getXmlSqlPkg();
+        if (StrKit.notBlank(xmlSqlPkg)) {
+            me.add(new SqlInXmlPlugin(xmlSqlPkg.split(";")));
+        }
+        
         this.plugin(me);
     }
 

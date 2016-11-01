@@ -1,14 +1,15 @@
 package net.dreamlu.easy.commons.utils;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.jfinal.core.Controller;
 import com.jfinal.core.JFinal;
 import com.jfinal.kit.HashKit;
 import com.jfinal.kit.StrKit;
-import net.dreamlu.easy.model.User;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import net.dreamlu.easy.model.User;
 
 /**
  * Web相关工具类
@@ -185,25 +186,28 @@ public final class WebUtils {
 	 * @param key
 	 */
 	public static void removeCookie(HttpServletResponse response, String key) {
-		setCookie(response, key, null, 0);
+		setCookie(response, key, null, null, 0);
 	}
 
 	/**
 	 * 设置cookie
-	 * @param response
-	 * @param name
-	 * @param value
-	 * @param maxAgeInSeconds
 	 */
-	public static void setCookie(HttpServletResponse response, String name, String value, int maxAgeInSeconds) {
+	public static void setCookie(HttpServletResponse response, String name, 
+            String value, int maxAgeInSeconds) {
+	    setCookie(response, name, value, null, maxAgeInSeconds);
+	}
+	
+	/**
+	 * 设置cookie
+	 */
+	public static void setCookie(HttpServletResponse response, String name, 
+	        String value, String domain, int maxAgeInSeconds) {
 		Cookie cookie = new Cookie(name, value);
 		cookie.setPath("/");
 		cookie.setMaxAge(maxAgeInSeconds);
-		
-		
-//		cookie.setDomain();
-		JFinal.me().getServletContext().getSessionCookieConfig();
-		
+		if (StrKit.notBlank(domain)) {
+		    cookie.setDomain(domain);
+		}
 		// 指定为httpOnly保证安全性
 		int version = JFinal.me().getServletContext().getMajorVersion();
 		if (version >= 3) {

@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.jfinal.core.JFinal;
 import com.jfinal.kit.StrKit;
 
 import net.dreamlu.easy.commons.config.EasyConstants;
@@ -15,21 +14,15 @@ import net.dreamlu.easy.commons.utils.WebUtils;
 
 public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
     private static SessionManager sessionManager = EasyConstants.me.getSessionManager();
+    private static String sessionCookieDomain = EasyConstants.me.getSessionCookieDomain();
+    private static String sessionCookieName = EasyConstants.me.getSessionCookieName();
+    private static int sessionTimeout = EasyConstants.me.getSessionTimeout();
     
     private final HttpServletResponse response;
-    private final String sessionDomain;
     
     public SessionRepositoryRequestWrapper(HttpServletRequest request, HttpServletResponse response) {
         super(request);
         this.response = response;
-        
-        String serverName = request.getServerName();
-        int index = serverName.indexOf('.');
-        if (index != -1) {
-            sessionDomain = serverName.substring(index, serverName.length());
-        } else {
-            sessionDomain = serverName;
-        }
     }
     
     private HttpServletRequest getHttpRequest() {
@@ -38,8 +31,7 @@ public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
     
     private String getSessionId() {
         HttpServletRequest request = getHttpRequest();
-        String cookieName = EasyConstants.me.getSessionCookieName();
-        return WebUtils.getCookie(request, cookieName);
+        return WebUtils.getCookie(request, sessionCookieName);
     }
     
     /**
@@ -55,10 +47,9 @@ public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
         String sessionId = getRequestedSessionId();
         // 默认getSession(true)
         if (null == sessionId) {
-            String cookieName = EasyConstants.me.getSessionCookieName();
-            int maxAgeInSeconds = EasyConstants.me.getSessionTimeout() * 60;
             sessionId = UUID.randomUUID().toString();
-            WebUtils.setCookie(response, cookieName, sessionId, maxAgeInSeconds);
+            int maxAgeInSeconds = sessionTimeout * 60;
+            WebUtils.setCookie(response, sessionCookieName, sessionId, sessionCookieDomain, maxAgeInSeconds);
         }
         EasySession session = sessionManager.get(sessionId);
         if (null == session) {

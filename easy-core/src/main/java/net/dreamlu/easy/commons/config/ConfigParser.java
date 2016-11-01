@@ -22,9 +22,9 @@ class ConfigParser {
         if (StrKit.notBlank(encoding)) {
             me.setEncoding(encoding);
         }
-        Integer maxPostSize = prop.getInt("app.max-post-size");
-        if (null != maxPostSize && maxPostSize > 0) {
-            me.setMaxPostSize(maxPostSize);
+        String maxPostSize = prop.get("app.max-post-size");
+        if (StrKit.notBlank(maxPostSize) && Integer.valueOf(maxPostSize) > 0) {
+            me.setMaxPostSize(Integer.valueOf(maxPostSize));
         }
         // 暂时不解析这2个字段
 //        String viewType     = prop.get("view.type");
@@ -66,9 +66,16 @@ class ConfigParser {
             easyConst.setSessionEnable(sessionEnable);
         }
         String sessionManager = prop.get("session.manager");
+        String sessionRedisName = prop.get("session.redis-name");
         if (StrKit.notBlank(sessionManager)) {
             if (sessionManager.equalsIgnoreCase("redis")) {
-                easyConst.setSessionManager(new RedisSessionManager());
+                RedisSessionManager manager;
+                if (StrKit.notBlank(sessionRedisName)) {
+                    manager = new RedisSessionManager(sessionRedisName);
+                } else {
+                    manager = new RedisSessionManager();
+                }
+                easyConst.setSessionManager(manager);
             }
         }
         Integer sessionTimeout = prop.getInt("session.timeout");
@@ -84,11 +91,11 @@ class ConfigParser {
             easyConst.setSessionCookieDomain(sessionCookieDomain);
         }
         
-        String xmlSqlPkg = prop.get("scan.xmlsql.pkg");
+        String xmlSqlPkg = prop.get("app.xmlsql.pkg");
         if (StrKit.notBlank(xmlSqlPkg)) {
             easyConst.setXmlSqlPkg(xmlSqlPkg);
         }
-        String eventPkg = prop.get("scan.event.pkg");
+        String eventPkg = prop.get("app.event.pkg");
         if (StrKit.notBlank(xmlSqlPkg)) {
             easyConst.setEventPkg(eventPkg);
         }

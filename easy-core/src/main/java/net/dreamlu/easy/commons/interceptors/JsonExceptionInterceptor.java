@@ -20,6 +20,7 @@ public class JsonExceptionInterceptor implements Interceptor{
         try {
             inv.invoke();
         } catch (Throwable e) {
+            // 发生异常时，可能还未render，照成此处render为null
             Render render = controller.getRender();
             if (render instanceof JsonRender) {
                 // json数据异常时返回
