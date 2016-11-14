@@ -75,12 +75,8 @@ public interface ApplicationConfig extends Config {
 	boolean sessionEnable(); // 是否启用Session
 	
 	@Key("session.manager")
-	@DefaultValue("redis")
+	@DefaultValue("redis:session")
 	String sessionManager();
-	
-	@Key("session.redis-name")
-	@DefaultValue("session")
-	String sessionRedisName();
 	
 	@Key("session.timeout")
 	@DefaultValue("30")
@@ -101,6 +97,9 @@ public interface ApplicationConfig extends Config {
 	
 	@Key("db.default.password")
 	String dbDefaultPwd();
+	
+	@Key("db.default.driver")
+	String dbDefaultDriver();
 	//weixin==================================================================//
 	@Key("wx.enable")
 	@DefaultValue("false")

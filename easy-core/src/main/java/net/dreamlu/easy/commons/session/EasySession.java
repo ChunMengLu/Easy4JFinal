@@ -91,7 +91,7 @@ class EasySession implements HttpSession, Serializable {
         setAttribute(key, value);
     }
 
-    public void removeAttribute(String key) {
+    public synchronized void removeAttribute(String key) {
         attributes.remove(key);
         manager.update(this);
     }
@@ -101,7 +101,7 @@ class EasySession implements HttpSession, Serializable {
         removeAttribute(key);
     }
 
-    public void setAttribute(String key, Object value) {
+    public synchronized void setAttribute(String key, Object value) {
         if (key == null) {
             throw new IllegalArgumentException("setAttribute: name parameter cannot be null");
         }
@@ -118,7 +118,7 @@ class EasySession implements HttpSession, Serializable {
         this.maxInactiveInterval = interval;
     }
 
-    public void setManager(SessionManager manager) {
+    public synchronized void setManager(SessionManager manager) {
         this.manager = manager;
     }
 }

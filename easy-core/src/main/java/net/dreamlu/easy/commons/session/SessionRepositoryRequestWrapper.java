@@ -1,7 +1,5 @@
 package net.dreamlu.easy.commons.session;
 
-import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -9,14 +7,22 @@ import javax.servlet.http.HttpSession;
 
 import com.jfinal.kit.StrKit;
 
-import net.dreamlu.easy.commons.config.EasyConstants;
+import net.dreamlu.easy.commons.config.ApplicationConfig;
+import net.dreamlu.easy.commons.utils.StrUtils;
 import net.dreamlu.easy.commons.utils.WebUtils;
 
 public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
-    private static SessionManager sessionManager = EasyConstants.me.getSessionManager();
-    private static String sessionCookieDomain = EasyConstants.me.getSessionCookieDomain();
-    private static String sessionCookieName = EasyConstants.me.getSessionCookieName();
-    private static int sessionTimeout = EasyConstants.me.getSessionTimeout();
+    private static SessionManager sessionManager;
+    private static String sessionCookieDomain;
+    private static String sessionCookieName;
+    private static int maxAgeInSeconds;
+    
+    public static void initCfg(ApplicationConfig cfg) {
+        sessionCookieDomain = cfg.sessionCookieDomain();
+        sessionCookieName = cfg.sessionCookieName();
+        maxAgeInSeconds = cfg.sessionTimeout() * 60;
+        sessionManager = new RedisSessionManager(cfg.sessionManager().split(":")[1]);
+    }
     
     private final HttpServletResponse response;
     
@@ -47,8 +53,7 @@ public class SessionRepositoryRequestWrapper extends HttpServletRequestWrapper {
         String sessionId = getRequestedSessionId();
         // 默认getSession(true)
         if (null == sessionId) {
-            sessionId = UUID.randomUUID().toString();
-            int maxAgeInSeconds = sessionTimeout * 60;
+            sessionId = StrUtils.getUUID();
             WebUtils.setCookie(response, sessionCookieName, sessionId, sessionCookieDomain, maxAgeInSeconds);
         }
         EasySession session = sessionManager.get(sessionId);

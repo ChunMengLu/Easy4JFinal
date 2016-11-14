@@ -1,12 +1,12 @@
 package net.dreamlu.example;
 
+import javax.sql.DataSource;
+
 import com.jfinal.kit.PathKit;
 import com.jfinal.plugin.activerecord.dialect.MysqlDialect;
-import com.jfinal.plugin.activerecord.generator.Generator;
 import com.jfinal.plugin.druid.DruidPlugin;
-import net.dreamlu.easy.commons.generator.EasyGenerator;
 
-import javax.sql.DataSource;
+import net.dreamlu.easy.commons.generator.EasyGenerator;
 
 /**
  * GeneratorDemo
