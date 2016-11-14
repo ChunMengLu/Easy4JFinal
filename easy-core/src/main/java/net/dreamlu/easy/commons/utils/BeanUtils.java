@@ -170,15 +170,6 @@ public class BeanUtils {
      * @return 属性值
      */
     public static Object getProperty(Object bean, String propertyName) {
-        if (bean instanceof Map) {
-            return ((Map)bean).get(propertyName);
-        }
-        if (bean instanceof Record) {
-            return ((Record)bean).get(propertyName);
-        }
-        if (bean instanceof Model) {
-            return ((Model)bean).get(propertyName);
-        }
         PropertyDescriptor[] beanPds = getPropertyDescriptors(bean);
         for (PropertyDescriptor propertyDescriptor : beanPds) {
             if (propertyDescriptor.getName().equals(propertyName)){
@@ -206,18 +197,6 @@ public class BeanUtils {
      * @param value 属性值
      */
     public static void setProperty(Object bean, String propertyName, Object value) {
-        if (bean instanceof Map) {
-            ((Map) bean).put(propertyName, value);
-            return;
-        }
-        if (bean instanceof Record) {
-            ((Record)bean).set(propertyName, value);
-            return;
-        }
-        if (bean instanceof Model) {
-            ((Model)bean).set(propertyName, value);
-            return;
-        }
         PropertyDescriptor[] beanPds = getPropertyDescriptors(bean);
         for (PropertyDescriptor propertyDescriptor : beanPds) {
             if (propertyDescriptor.getName().equals(propertyName)){

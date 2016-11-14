@@ -8,6 +8,9 @@
 	<packaging>war</packaging>
 
 	<properties>
+		<jdk.version>1.6</jdk.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<dependencies>
@@ -48,8 +51,18 @@
 	</dependencies>
 
 	<build>
-		<finalName>easy-module</finalName>
+		<finalName>easy-example</finalName>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
 			<!-- Idea 添加此插件以便启动jetty -->
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>

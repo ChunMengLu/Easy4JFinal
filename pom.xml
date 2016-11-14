@@ -22,10 +22,10 @@
 	</description>
 
 	<properties>
+		<jdk.version>1.6</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<servlet.version>3.0.1</servlet.version>
-		<jdk.version>1.6</jdk.version>
 		<junit.version>4.12</junit.version>
 		<jfinal.version>2.2</jfinal.version>
 		<beetl.version>2.4.0</beetl.version>
