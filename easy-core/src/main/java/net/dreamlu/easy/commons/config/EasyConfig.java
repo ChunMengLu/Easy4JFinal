@@ -102,6 +102,7 @@ public abstract class EasyConfig extends JFinalConfig {
         
         // default 配置Druid数据库连接池插件
         DruidPlugin druidPlugin = new DruidPlugin(url, user, password);
+        druidPlugin.setDriverClass("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
         druidPlugin.addFilter(new StatFilter()).addFilter(new Log4j2Filter());
         WallFilter wall = new WallFilter();
         druidPlugin.addFilter(wall);

@@ -6,6 +6,17 @@
         </Console>
     </Appenders>
     <Loggers>
+        <!-- 减少部分debug日志 -->
+        <Logger name="druid.sql" level="INFO" />
+        <Logger name="net.sf.ehcache" level="INFO" />
+
+        <Logger name="jdbc.sqltiming" level="INFO" />
+        <Logger name="jdbc.resultsettable" level="OFF" />
+        <Logger name="jdbc.sqlonly" level="OFF" />
+        <Logger name="jdbc.audit" level="OFF" />
+        <Logger name="jdbc.resultset" level="OFF" />
+        <Logger name="jdbc.connection" level="OFF" />
+
         <Root level="debug">
             <AppenderRef ref="Console" />
         </Root>
