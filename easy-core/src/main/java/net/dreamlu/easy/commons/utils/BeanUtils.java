@@ -14,6 +14,7 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Record;
 
 import net.sf.cglib.beans.BeanCopier;
+import net.sf.cglib.beans.BeanGenerator;
 import net.sf.cglib.beans.BeanMap;
 import net.sf.cglib.core.Converter;
 
@@ -27,6 +28,34 @@ import net.sf.cglib.core.Converter;
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class BeanUtils {
+    /**
+     * 给一个Bean添加字段
+     * @param superBean 父级Bean
+     * @param props 新增属性
+     * @return  {Object}
+     */
+    public static Object generator(Object superBean, BeanProperty... props) {
+        Class<?> superclass = superBean.getClass();
+        Object genBean = generator(superclass, props);
+        BeanUtils.copy(superBean, genBean);
+        return genBean;
+    }
+    
+    /**
+     * 给一个class添加字段
+     * @param superclass 父级
+     * @param props 新增属性
+     * @return {Object}
+     */
+    public static Object generator(Class<?> superclass, BeanProperty... props) {
+        BeanGenerator generator = new BeanGenerator();
+        generator.setSuperclass(superclass);
+        for (BeanProperty prop : props) {
+            generator.addProperty(prop.getName(), prop.getType());
+        }
+        return generator.create();
+    }
+    
     /**
      * copy 对象属性到另一个对象，默认不使用Convert
      * @param src
