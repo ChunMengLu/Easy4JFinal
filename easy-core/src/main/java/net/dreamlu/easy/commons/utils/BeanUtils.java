@@ -112,6 +112,51 @@ public class BeanUtils {
     }
     
     /**
+     * 将model转为 bean
+     */
+    public static <T> T toBean(Model<?> model, Class<T> valueType) {
+        return toBean(CPI.getAttrs(model), valueType);
+    }
+    
+    /**
+     * 将record转为 bean
+     */
+    public static <T> T toBean(Record record, Class<T> valueType) {
+        return toBean(record.getColumns(), valueType);
+    }
+    
+    /**
+     * 将map 转为 bean
+     */
+    public static <T> T toBean(Map<String, Object> beanMap, Class<T> valueType) {
+        T bean = ClassUtils.newInstance(valueType);
+        PropertyDescriptor[] beanPds = getPropertyDescriptors(bean);
+        for (PropertyDescriptor propDescriptor : beanPds) {
+            String propName = propDescriptor.getName();
+            // 过滤class属性 
+            if (propName.equals("class")) {
+                continue;
+            }
+            if (beanMap.containsKey(propName)) { 
+                Method writeMethod = propDescriptor.getWriteMethod();
+                if (null == writeMethod) {
+                    continue;
+                }
+                Object value = beanMap.get(propName);
+                if (!writeMethod.isAccessible()) {
+                    writeMethod.setAccessible(true);
+                }
+                try {
+                    writeMethod.invoke(bean, value);
+                } catch (Throwable e) {
+                    throw new RuntimeException("Could not set property '" + propName + "' to bean", e);
+                }
+            } 
+        }
+        return bean;
+    }
+    
+    /**
      * 将对象装成map形式
      * @param src 源对象
      * @return Map

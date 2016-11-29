@@ -21,7 +21,6 @@ import com.jfinal.plugin.druid.DruidStatViewHandler;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 
 import net.dreamlu.controller.UeditorApiController;
-import net.dreamlu.easy.commons.interceptors.JsonExceptionInterceptor;
 import net.dreamlu.easy.commons.logs.Log4j2LogFactory;
 import net.dreamlu.easy.commons.plugin.event.EventPlugin;
 import net.dreamlu.easy.commons.plugin.sqlinxml.SqlInXmlPlugin;
@@ -69,8 +68,7 @@ public abstract class EasyConfig extends JFinalConfig {
             me.add(new RenderingTimeHandler());
             me.add(new ViewDevHandler(cfg.devUrlPrefix(), cfg.devDevDir()));
         }
-        me.add(new UrlSkipHandler("/static", false));
-        me.add(new UrlSkipHandler("/ws", false));
+        me.add(new UrlSkipHandler("/(static|ws)+.*", false));
         me.add(new DruidStatViewHandler("/admin/druid"));
         me.add(new SessionIdHandler());
         if (cfg.sessionEnable()) {
@@ -80,8 +78,8 @@ public abstract class EasyConfig extends JFinalConfig {
 
     @Override
     public void configInterceptor(Interceptors me) {
-        // 全局json异常处理
-        me.addGlobalActionInterceptor(new JsonExceptionInterceptor());
+        // 全局json异常处理，该类有bug
+//        me.addGlobalActionInterceptor(new JsonExceptionInterceptor());''
         // ServletContext拦截器，将request, response存储于ThreadLocal中解耦
         me.addGlobalActionInterceptor(new ServletContextInterceptor());
     }
