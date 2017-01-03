@@ -50,7 +50,7 @@ public class AnnotationReader {
 				return super.visitAnnotation(annotation, visible);
 			}
 			
-		}, 0);
+		}, ClassReader.SKIP_CODE);
 		return visitorResult[0];
 	}
 
