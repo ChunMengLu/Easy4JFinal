@@ -36,7 +36,7 @@ public class ClassSearcher {
     }
     
     public static Set<Class<?>> getClasses(String[] packageNames, Class<? extends Annotation>[] annotations) {
-        final AnnotationClassReader reader = new AnnotationClassReader();
+        final AnnotationReader reader = new AnnotationReader();
         for (Class<? extends Annotation> annotation : annotations) {
             reader.addAnnotation(annotation);
         }
@@ -46,14 +46,14 @@ public class ClassSearcher {
         FileSearcher finder = new FileSearcher() {
             @Override
             public void visitFileEntry(FileEntry file) {
-                try {
-                    if (file.isJavaClass()) {
+                if (file.isJavaClass()) {
+                    try {
                         if (reader.isAnnotationed(file.getInputStream())) {
                             addClass(file.getQualifiedJavaName());
                         }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
             }
             

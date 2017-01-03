@@ -67,7 +67,6 @@ public interface ApplicationConfig extends Config {
 	String[] eventPkg();
 
 	@Key("sqls.file")
-	@DefaultValue("sqls/sql.txt")
 	String sqlsFile();
 	//session=================================================================//
 	@Key("session.enable")
