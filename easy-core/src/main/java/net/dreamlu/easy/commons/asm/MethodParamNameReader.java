@@ -27,7 +27,7 @@ public class MethodParamNameReader {
 	 * @param method 方法
 	 * @return 方法参数名
 	 */
-	public static String[] read(Method method) {
+	public static String[] read(final Method method) {
 		final Type[] types = Type.getArgumentTypes(method);
 		final String[] paramNames = new String[types.length];
 		final String n = method.getDeclaringClass().getName();

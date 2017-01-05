@@ -87,11 +87,20 @@
 			<artifactId>JFinal-ueditor</artifactId>
 			<version>0.0.3</version>
 		</dependency>
+		<!-- 二维码生成和识别工具 begin -->
 		<dependency>
-			<groupId>org.bgee.log4jdbc-log4j2</groupId>
-			<artifactId>log4jdbc-log4j2-jdbc4</artifactId>
-			<version>1.16</version>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>${zxing.version}</version>
+			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>${zxing.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- 二维码生成和识别工具 end -->
 	</dependencies>
 
 	<build>
