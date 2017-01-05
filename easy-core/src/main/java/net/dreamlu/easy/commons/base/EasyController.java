@@ -64,12 +64,12 @@ public class EasyController extends Controller {
      * 设置WebSocket的消息Id，为加密的用户Id
      */
     public void setWebSocketMsgId() {
-    	Integer userId = getCurrentUserId();
-    	if (userId == null) {
-    		throw new RuntimeException("userId is null!");
-    	}
-    	String msgId = WebSocketKit.getMsgId(userId + "");
-    	setAttr("msgId", msgId);
+        Integer userId = getCurrentUserId();
+        if (userId == null) {
+            throw new RuntimeException("userId is null!");
+        }
+        String msgId = WebSocketKit.getMsgId(userId + "");
+        setAttr("msgId", msgId);
     }
     
     /**

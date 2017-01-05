@@ -21,12 +21,12 @@ public class EasyGenerator extends Generator {
         super(dataSource, new EasyBaseModelGenerator(baseModelPackageName, baseModelOutputDir));
     }
     
-    // 页面模板生成器
-    protected TemplateGenerator templateGenerator;
     // 模版目录
     protected String templateDir;
     // 输出目录
     protected String outPutDir;
+    // 是否生成模版
+    private boolean generateTemplate = false;
     
     // 自定义模版变量
     protected Map<String, Object> vars = new HashMap<String, Object>();
@@ -44,6 +44,10 @@ public class EasyGenerator extends Generator {
         return this;
     }
     
+    public void setGenerateTemplate(boolean generateTemplate) {
+        this.generateTemplate = generateTemplate;
+    }
+
     @Override
     public void generate() {
         // 先执行父类的生成
@@ -53,11 +57,11 @@ public class EasyGenerator extends Generator {
         List<TableMeta> tableMetas = metaBuilder.build();
         baseModelGenerator.generate(tableMetas);
         
-        if (templateGenerator != null) {
-            templateGenerator.generate(templateDir, outPutDir, vars, tableMetas);
+        if (generateTemplate) {
+            TemplateGenerator.generate(templateDir, outPutDir, vars, tableMetas);
         }
         
         long usedTime = (System.currentTimeMillis() - start) / 1000;
-        System.out.println("EasyGenerator complete in " + usedTime + " seconds.");
+        System.out.println("EasyGenerator template in " + usedTime + " seconds.");
     }
 }

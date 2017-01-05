@@ -29,7 +29,7 @@ public class TemplateGenerator {
      * @param vars 参数变量
      * @param tableMetas 数据库参数
      */
-    public void generate(String templateDir, String outPutDir, Map<String, Object> vars, List<TableMeta> tableMetas) {
+    public static void generate(String templateDir, String outPutDir, Map<String, Object> vars, List<TableMeta> tableMetas) {
         Map<String, Object> paras = new HashMap<String, Object>();
         paras.put("tableList", tableMetas);
         paras.putAll(vars);
@@ -46,11 +46,30 @@ public class TemplateGenerator {
         }
         // 模版目录
         List<File> fileList = FileUtils.list(templatePath);
+        for (TableMeta tableMeta : tableMetas) {
+            for (File file : fileList) {
+                String templateName = file.getName();
+                String fileName = generateTemplateFileName(templateName, tableMeta);
+                try {
+                    String template = FileUtils.readToString(file);
+                    String filePath = outPutDir + File.separator + fileName;
+                    generateTemplete(template, paras, filePath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                
+            }
+        }
     }
     
-    public static void main(String[] args) {
-        
-        System.out.println();
+    /**
+     * 生成模版文件名
+     */
+    private static String generateTemplateFileName(String templateName, TableMeta tableMeta) {
+        Map<String, Object> paras = new HashMap<String, Object>();
+        paras.put("tableName", tableMeta.name);
+        paras.put("modelName", tableMeta.modelName);
+        return BeetlKit.render(templateName, paras);
     }
     
     /**
@@ -59,10 +78,10 @@ public class TemplateGenerator {
      * @param paras 模版参数
      * @param filePath 输出目录
      */
-    private static void generateTemplete(String templateFileName, Map<String, Object> paras, String filePath) {
+    private static void generateTemplete(String template, Map<String, Object> paras, String filePath) {
         FileOutputStream output = null;
         try {
-            String data = BeetlKit.render(templateFileName, paras);
+            String data = BeetlKit.render(template, paras);
             File file = new File(filePath);
             File dir = new File(file.getParent());
             if (!dir.exists()) {
@@ -77,4 +96,5 @@ public class TemplateGenerator {
             IOUtils.closeQuietly(output);
         }
     }
+    
 }

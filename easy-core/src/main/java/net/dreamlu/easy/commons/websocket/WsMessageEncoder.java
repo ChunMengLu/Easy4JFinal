@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSON;
  * websocket消息编码
  * @author L.cm
  */
+@SuppressWarnings("rawtypes")
 public class WsMessageEncoder implements Encoder.Text<WsMessage> {
 
     @Override

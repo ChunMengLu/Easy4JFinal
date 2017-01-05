@@ -35,7 +35,7 @@
 
 > 2. Spring mvc、Spring session、Spring core、mybatis
 
-> 3. resty
+> 3. blade、resty、JfinalUIB
 
 > 4. jetbrick-template
 
@@ -48,7 +48,9 @@
 > 8. Tomcat
 
 ## 捐助列表
-> jimmy 支付宝 ￥5.00
+> jimmy ￥5.00
+
+> Edik  ￥20
 
 ## License
 

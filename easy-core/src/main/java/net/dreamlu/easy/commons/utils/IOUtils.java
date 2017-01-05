@@ -5,6 +5,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 /**
@@ -73,6 +74,24 @@ public abstract class IOUtils {
             throw new RuntimeException(e);
         } finally {
             IOUtils.closeQuietly(out);
+        }
+    }
+    
+    /**
+     * Writes chars from a <code>String</code> to bytes on an
+     * <code>OutputStream</code> using the specified character encoding.
+     * <p>
+     * This method uses {@link String#getBytes(String)}.
+     *
+     * @param data the <code>String</code> to write, null ignored
+     * @param output the <code>OutputStream</code> to write to
+     * @param encoding the encoding to use, null means platform default
+     * @throws NullPointerException if output is null
+     * @throws IOException          if an I/O error occurs
+     */
+    public static void write(final String data, final OutputStream output, final Charset encoding) throws IOException {
+        if (data != null) {
+            output.write(data.getBytes(encoding));
         }
     }
 }

@@ -12,6 +12,7 @@ import net.dreamlu.easy.commons.utils.StrUtils;
  * websocket 消息解码
  * @author L.cm
  */
+@SuppressWarnings("rawtypes")
 public class WsMessageDecoder implements Decoder.Text<WsMessage> {
 
     @Override
