@@ -30,22 +30,14 @@
 
 > 14.内置继承DataTables;
 
+> 15.内置ioc
+
 ## 参考vs鸣谢
-> 1. JFinal
+> 1. JFinal、blade、JfinalUIB、eova、resty
 
 > 2. Spring mvc、Spring session、Spring core、mybatis
 
-> 3. blade、resty、JfinalUIB
-
-> 4. jetbrick-template
-
-> 5. beetl
-
-> 6. eova
-
-> 7. FastJson、Druid
-
-> 8. Tomcat
+> 3. jetbrick-template、beetl、FastJson、Druid、Tomcat
 
 ## 捐助列表
 > jimmy ￥5.00
