@@ -14,11 +14,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Component {
-	/**
-	 * 用于Handler和Interceptor的扫描
-	 * The order value. Default is {@link Integer#MAX_VALUE}.
-	 * @return order
-	 */
-	int order() default Integer.MAX_VALUE;
-}
+public @interface Component {}
