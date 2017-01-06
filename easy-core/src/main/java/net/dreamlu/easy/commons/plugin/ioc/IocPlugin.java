@@ -1,8 +1,6 @@
 package net.dreamlu.easy.commons.plugin.ioc;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,7 +40,6 @@ public class IocPlugin implements IPlugin {
 		Set<Class<?>> clzzSet = ClassSearcher.getClasses(pkgs, 
 				Controller.class, Service.class, Component.class);
 		// 装载bean
-		Map<String, Object> beanMap = new HashMap<String, Object>();
 		for (Class<?> clazz : clzzSet) {
 			// 如果是控制器
 			if (com.jfinal.core.Controller.class.isAssignableFrom(clazz)) {
@@ -52,18 +49,17 @@ public class IocPlugin implements IPlugin {
 			String beanName = clazz.getName();
 			// 增强bean，使bean具备处理@Befor
 			Object enhanceBean = Enhancer.enhance(clazz);
-			if (beanMap.containsKey(beanName)) {
+			if (iocBeanMap.containsKey(beanName)) {
 				log.warn("bean:" + beanName + " reloading!");
 			}
-			beanMap.put(beanName, enhanceBean);
+			iocBeanMap.put(beanName, enhanceBean);
 		}
-		iocBeanMap.putAll(beanMap);
 		IocKit.init(iocBeanMap);
 		// 处理Bean的相互@Inject
 		Collection<Object> beanColl = iocBeanMap.values();
 		for (Object object : beanColl) {
 			Class<?> superclass = object.getClass().getSuperclass();
-			InjectUtils.inject(superclass, object, iocBeanMap);
+			InjectUtils.inject(superclass, object);
 		}
 		return true;
 	}

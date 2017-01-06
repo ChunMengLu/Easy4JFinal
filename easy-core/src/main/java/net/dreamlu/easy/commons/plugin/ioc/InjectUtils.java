@@ -2,12 +2,10 @@ package net.dreamlu.easy.commons.plugin.ioc;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Map;
 
 import com.jfinal.log.Log;
 
 import net.dreamlu.easy.commons.annotation.Inject;
-import net.dreamlu.easy.commons.plugin.ioc.IocKit;
 
 /**
  * Bean注入工具类
@@ -19,10 +17,10 @@ public class InjectUtils {
 	
 	public static void inject(final Object target) {
 		Class<?> clazz = target.getClass();
-		inject(clazz, target, IocKit.getBeanMap());
+		inject(clazz, target);
 	}
 	
-	static void inject(Class<?> clazz, final Object target, final Map<String, Object> beanMap) {
+	static void inject(Class<?> clazz, final Object target) {
 		System.out.println(clazz);
 		Field[] fields = clazz.getDeclaredFields();
 		for(Field field : fields){
@@ -37,7 +35,7 @@ public class InjectUtils {
 			if (Modifier.isStatic(modifiers)) {
 				log.warn("Class " + clazz + " field " + field.getName() + "is static!");
 			}
-			Object value = beanMap.get(field.getType().getName());
+			Object value = IocKit.getBean(field.getType());
 			if (value == null) {
 				throw new RuntimeException("not has bean:" + field.getType());
 			}
