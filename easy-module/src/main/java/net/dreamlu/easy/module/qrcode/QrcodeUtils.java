@@ -1,4 +1,4 @@
-package net.dreamlu.easy.commons.utils;
+package net.dreamlu.easy.module.qrcode;
 
 import java.io.OutputStream;
 import java.util.Hashtable;
@@ -8,6 +8,8 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
+
+import net.dreamlu.easy.commons.utils.Charsets;
 
 /**
  * 二维码、条码生成处理类

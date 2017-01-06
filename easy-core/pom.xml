@@ -82,20 +82,6 @@
 			<version>2.7.2</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- 二维码生成和识别工具 begin -->
-		<dependency>
-			<groupId>com.google.zxing</groupId>
-			<artifactId>core</artifactId>
-			<version>${zxing.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.zxing</groupId>
-			<artifactId>javase</artifactId>
-			<version>${zxing.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- 二维码生成和识别工具 end -->
 	</dependencies>
 
 	<build>
