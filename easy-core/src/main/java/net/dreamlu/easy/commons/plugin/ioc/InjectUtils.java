@@ -21,10 +21,8 @@ public class InjectUtils {
 	}
 	
 	static void inject(Class<?> clazz, final Object target) {
-		System.out.println(clazz);
 		Field[] fields = clazz.getDeclaredFields();
 		for(Field field : fields){
-			System.out.println(field.getName());
 			if (null == field || !field.isAnnotationPresent(Inject.class)) {
 				continue;
 			}

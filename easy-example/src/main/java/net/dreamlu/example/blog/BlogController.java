@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.jfinal.aop.Before;
 import com.jfinal.kit.JsonKit;
+import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.upload.UploadFile;
 
+import net.dreamlu.easy.commons.annotation.Inject;
 import net.dreamlu.easy.commons.base.EasyController;
 import net.dreamlu.example.model.Blog;
 
@@ -14,10 +16,13 @@ import net.dreamlu.example.model.Blog;
  * BlogController
  * 所有 sql 与业务逻辑写在 Model 或 Service 中，不要写在 Controller 中，养成好习惯，有利于大型项目的开发与维护
  */
-@Before(BlogInterceptor.class)
 public class BlogController extends EasyController {
+	@Inject
+	private BlogService userService;
+	
 	public void index() {
-		setAttr("blogPage", Blog.dao.paginate(getParaToInt(0, 1), 10));
+		Page<Blog> blogPage = userService.findByPage(getParaToInt(0, 1), 10);
+		setAttr("blogPage", blogPage);
 		render("blog.html");
 	}
 	
