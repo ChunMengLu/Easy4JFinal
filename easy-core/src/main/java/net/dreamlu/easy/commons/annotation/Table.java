@@ -18,7 +18,7 @@ public @interface Table {
 	 * 对应的表名
 	 * @return {String}
 	 */
-	String value() default "";
+	String value();
 	/**
 	 * 表主键
 	 * @return {String}

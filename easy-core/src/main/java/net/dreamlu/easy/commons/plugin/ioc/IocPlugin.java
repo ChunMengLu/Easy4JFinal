@@ -38,7 +38,7 @@ public class IocPlugin implements IPlugin {
 	public boolean start() {
 		// 扫描控制器、服务和组件
 		Set<Class<?>> clzzSet = ClassSearcher.getClasses(pkgs, 
-				Controller.class, Service.class, Component.class);
+				Controller.class, Service.class, Component.class); // , Table.class
 		// 装载bean
 		for (Class<?> clazz : clzzSet) {
 			// 如果是控制器
@@ -46,6 +46,8 @@ public class IocPlugin implements IPlugin {
 				initController(clazz);
 				continue;
 			}
+			// table处理，待开发
+			
 			String beanName = clazz.getName();
 			// 增强bean，使bean具备处理@Befor
 			Object enhanceBean = Enhancer.enhance(clazz);
@@ -82,4 +84,5 @@ public class IocPlugin implements IPlugin {
 		}
 		routes.add(controller.value(), (Class<? extends com.jfinal.core.Controller>) clazz, viewPath);
 	}
+
 }

@@ -15,10 +15,14 @@ import javax.sql.DataSource;
 public class EasyGenerator extends Generator {
     public EasyGenerator(DataSource dataSource, String baseModelPackageName, String baseModelOutputDir, String modelPackageName, String modelOutputDir) {
         super(dataSource, new EasyBaseModelGenerator(baseModelPackageName, baseModelOutputDir), new EasyModelGenerator(modelPackageName, baseModelPackageName, modelOutputDir));
+        // 不生成MappingKit，采用注解注入
+//        setMappingKitGenerator(new MappingKitGenerator(null, null));
     }
 
     public EasyGenerator(DataSource dataSource, String baseModelPackageName, String baseModelOutputDir) {
         super(dataSource, new EasyBaseModelGenerator(baseModelPackageName, baseModelOutputDir));
+        // 不生成MappingKit，采用注解注入
+//        setMappingKitGenerator(new MappingKitGenerator(null, null));
     }
     
     // 模版目录

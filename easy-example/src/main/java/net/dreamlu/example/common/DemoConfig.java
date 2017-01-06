@@ -1,8 +1,7 @@
 package net.dreamlu.example.common;
 
 
-import com.jfinal.config.Constants;
-import com.jfinal.config.Handlers;
+import com.jfinal.config.Interceptors;
 import com.jfinal.config.Plugins;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 
@@ -14,10 +13,11 @@ import net.dreamlu.example.ws.TimeTaskTest;
  * API引导式配置
  */
 public class DemoConfig extends EasyConfig {
-
+	
 	@Override
-	public void constant(Constants me) {
-
+	public void configInterceptor(Interceptors me) {
+		super.configInterceptor(me);
+		me.addGlobalActionInterceptor(new GlobalInterceptor());
 	}
 
 	@Override
@@ -26,17 +26,13 @@ public class DemoConfig extends EasyConfig {
 	}
 
 	@Override
-    public void configHandler(Handlers me) {
-        super.configHandler(me);
-    }
-
-    @Override
 	public void plugin(Plugins plugins) {
-//	    plugins.add(new RedisPlugin("main", "127.0.0.1"));
+//		plugins.add(new RedisPlugin("main", "127.0.0.1"));
 	}
 
-    @Override
-	public void onEasyStart() {
-	    TimeTaskTest.start();
+	@Override
+	public void afterJFinalStart() {
+		super.afterJFinalStart();
+		TimeTaskTest.start();
 	}
 }

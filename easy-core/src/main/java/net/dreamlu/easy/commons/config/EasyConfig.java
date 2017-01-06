@@ -20,7 +20,6 @@ import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.druid.DruidStatViewHandler;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 
-import net.dreamlu.controller.UeditorApiController;
 import net.dreamlu.easy.commons.interceptors.InjectInterceptor;
 import net.dreamlu.easy.commons.logs.Log4j2LogFactory;
 import net.dreamlu.easy.commons.plugin.event.EventPlugin;
@@ -28,6 +27,8 @@ import net.dreamlu.easy.commons.plugin.ioc.IocPlugin;
 import net.dreamlu.easy.commons.plugin.sqlinxml.SqlInXmlPlugin;
 import net.dreamlu.easy.commons.servlet.ServletContextInterceptor;
 import net.dreamlu.easy.commons.session.SessionHandler;
+import net.dreamlu.easy.core.CaptchaController;
+import net.dreamlu.easy.core.auth.AuthController;
 import net.dreamlu.easy.handler.RenderingTimeHandler;
 import net.dreamlu.easy.handler.SessionIdHandler;
 import net.dreamlu.easy.handler.ViewDevHandler;
@@ -57,8 +58,9 @@ public abstract class EasyConfig extends JFinalConfig {
 
     @Override
     public void configRoute(Routes me) {
+        me.add("/captcha", CaptchaController.class);
+        me.add("/auth", AuthController.class);
         routes = me;
-        me.add("/ueditor/api", UeditorApiController.class);
     }
 
     @Override
@@ -77,8 +79,6 @@ public abstract class EasyConfig extends JFinalConfig {
 
     @Override
     public void configInterceptor(Interceptors me) {
-        // 全局json异常处理，该类有bug
-//        me.addGlobalActionInterceptor(new JsonExceptionInterceptor());''
         // ServletContext拦截器，将request, response存储于ThreadLocal中解耦
         me.addGlobalActionInterceptor(new ServletContextInterceptor());
         me.addGlobalActionInterceptor(new InjectInterceptor());
@@ -111,6 +111,7 @@ public abstract class EasyConfig extends JFinalConfig {
         arp.setShowSql(cfg.devMode());
         me.add(arp);
         
+        // 注解扫描
         me.add(new IocPlugin(routes, cfg.iocScanPkg()));
         
         // ehcahce插件配置
@@ -136,16 +137,12 @@ public abstract class EasyConfig extends JFinalConfig {
     @Override
     public void afterJFinalStart() {
         esay.initAfterStart();
-        // 启动
-        onEasyStart();
         // showBanner，未来再做强化，支持自定义和彩色显示
         showBanner();
     }
 
-    public abstract void constant(Constants me);
     public abstract void mapping(ActiveRecordPlugin arp);
     public abstract void plugin(Plugins plugins);
-    public abstract void onEasyStart();
 
     private void showBanner() {
         System.err.println("Easy4JFinal " + Easy4JFinal.VERSION + " started to complete~~~");

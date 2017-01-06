@@ -2,6 +2,7 @@ package net.dreamlu.easy.model;
 
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.jfinal.plugin.ehcache.IDataLoader;
+
 import net.dreamlu.easy.model.base.BaseOptions;
 
 /**

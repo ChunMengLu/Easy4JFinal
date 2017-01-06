@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-import org.apache.commons.io.FileUtils;
-
 import com.jfinal.kit.PathKit;
 
 import net.dreamlu.easy.commons.parsing.GenericTokenParser;
@@ -86,7 +84,7 @@ public class StrUtils {
     public static String render(String view, Map<String, String> map) {
         String viewPath = PathKit.getWebRootPath() + view;
         try {
-            String html = FileUtils.readFileToString(new File(viewPath), "UTF-8");
+            String html = FileUtils.readToString(new File(viewPath));
             return format(html, map);
         } catch (IOException e) {
             throw new RuntimeException(e);
