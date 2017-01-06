@@ -1,7 +1,6 @@
 package net.dreamlu.example.common;
 
 
-import com.jfinal.config.Interceptors;
 import com.jfinal.config.Plugins;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 
@@ -13,12 +12,6 @@ import net.dreamlu.example.ws.TimeTaskTest;
  * API引导式配置
  */
 public class DemoConfig extends EasyConfig {
-	
-	@Override
-	public void configInterceptor(Interceptors me) {
-		super.configInterceptor(me);
-		me.addGlobalActionInterceptor(new GlobalInterceptor());
-	}
 
 	@Override
 	public void mapping(ActiveRecordPlugin arp) {
