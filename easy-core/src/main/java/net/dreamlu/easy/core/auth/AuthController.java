@@ -3,6 +3,7 @@ package net.dreamlu.easy.core.auth;
 import com.jfinal.aop.Before;
 import com.jfinal.kit.HashKit;
 
+import net.dreamlu.easy.commons.annotation.Controller;
 import net.dreamlu.easy.commons.base.EasyController;
 import net.dreamlu.easy.commons.utils.WebUtils;
 import net.dreamlu.easy.model.User;
@@ -10,6 +11,7 @@ import net.dreamlu.easy.model.User;
 /**
  * Created by L.cm on 2016/6/23.
  */
+@Controller("/auth")
 public class AuthController extends EasyController {
     /**
      * 登录

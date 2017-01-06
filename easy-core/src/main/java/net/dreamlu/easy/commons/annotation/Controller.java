@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Documented
 @Inherited
 public @interface Controller {
-	String value() default "";
+	String value() default "/";
 
 	String viewPath() default "";
 }

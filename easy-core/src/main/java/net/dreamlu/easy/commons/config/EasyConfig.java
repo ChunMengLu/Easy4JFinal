@@ -28,8 +28,6 @@ import net.dreamlu.easy.commons.plugin.ioc.IocPlugin;
 import net.dreamlu.easy.commons.plugin.sqlinxml.SqlInXmlPlugin;
 import net.dreamlu.easy.commons.servlet.ServletContextInterceptor;
 import net.dreamlu.easy.commons.session.SessionHandler;
-import net.dreamlu.easy.core.CaptchaController;
-import net.dreamlu.easy.core.auth.AuthController;
 import net.dreamlu.easy.handler.RenderingTimeHandler;
 import net.dreamlu.easy.handler.SessionIdHandler;
 import net.dreamlu.easy.handler.ViewDevHandler;
@@ -60,10 +58,7 @@ public abstract class EasyConfig extends JFinalConfig {
     @Override
     public void configRoute(Routes me) {
         routes = me;
-        me.add("/captcha", CaptchaController.class);
-        me.add("/auth", AuthController.class);
         me.add("/ueditor/api", UeditorApiController.class);
-        this.route(me);
     }
 
     @Override
@@ -148,7 +143,6 @@ public abstract class EasyConfig extends JFinalConfig {
     }
 
     public abstract void constant(Constants me);
-    public abstract void route(Routes me);
     public abstract void mapping(ActiveRecordPlugin arp);
     public abstract void plugin(Plugins plugins);
     public abstract void onEasyStart();
