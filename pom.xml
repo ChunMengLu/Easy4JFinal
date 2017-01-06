@@ -10,7 +10,6 @@
 
 	<modules>
 		<module>easy-core</module>
-		<module>easy-widget</module>
 		<module>easy-module</module>
 	</modules>
 
@@ -29,12 +28,12 @@
 		<junit.version>4.12</junit.version>
 		<jfinal.version>2.2</jfinal.version>
 		<cglib.version>3.2.4</cglib.version>
-		<beetl.version>2.4.0</beetl.version>
-		<druid.version>1.0.26</druid.version>
-		<mysql.version>5.1.39</mysql.version>
-		<fastjson.version>1.2.11</fastjson.version>
+		<beetl.version>2.7.5</beetl.version>
+		<druid.version>1.0.27</druid.version>
+		<mysql.version>5.1.40</mysql.version>
+		<fastjson.version>1.2.23</fastjson.version>
 		<ehcache.version>2.6.11</ehcache.version>
-		<log4j2.version>2.6.2</log4j2.version>
+		<log4j2.version>2.7</log4j2.version>
 		<owner.version>1.0.9</owner.version>
 		<zxing.version>3.3.0</zxing.version>
 	</properties>
@@ -117,6 +116,17 @@
 			<groupId>com.ibeetl</groupId>
 			<artifactId>beetl</artifactId>
 			<version>${beetl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>${ehcache.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
