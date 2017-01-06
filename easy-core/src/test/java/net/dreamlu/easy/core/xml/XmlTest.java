@@ -10,7 +10,7 @@ public class XmlTest {
         
         pp.start();
         
-        System.out.println(SqlKit.get("net.dreamlu.model.UserModel#findByAge"));
+        System.out.println(SqlKit.get("net.dreamlu.model.UserModel#findByName@ext"));
     }
 }
 

@@ -30,12 +30,7 @@ public class ClassSearcher {
         return getClasses(pkgs, annotations);
     }
     
-    public static Set<Class<?>> getClasses(String[] packageNames, Class<? extends Annotation> annotation) {
-        Class<? extends Annotation>[] annotations = new Class[]{annotation};
-        return getClasses(packageNames, annotations);
-    }
-    
-    public static Set<Class<?>> getClasses(String[] packageNames, Class<? extends Annotation>[] annotations) {
+    public static Set<Class<?>> getClasses(String[] packageNames, Class<? extends Annotation>... annotations) {
         final AnnotationReader reader = new AnnotationReader();
         for (Class<? extends Annotation> annotation : annotations) {
             reader.addAnnotation(annotation);

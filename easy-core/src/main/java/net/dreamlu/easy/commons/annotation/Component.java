@@ -1,16 +1,17 @@
 package net.dreamlu.easy.commons.annotation;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 资源注解
+ * 自定义的bean加载
  * @author L.cm
+ *
  */
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Resource {
-	String value();
-}
+@Documented
+public @interface Component {}

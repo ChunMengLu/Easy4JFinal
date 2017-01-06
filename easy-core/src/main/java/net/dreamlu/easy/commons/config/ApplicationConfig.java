@@ -30,6 +30,11 @@ public interface ApplicationConfig extends Config {
 	@DefaultValue("uploads")
 	String uploadPath();
 	
+	@Separator(";")
+	@DefaultValue("")
+	@Key("ioc.scan.pkg")
+	String[] iocScanPkg();
+	
 	@Key("json.date-pattern")
 	@DefaultValue("yyyy-MM-dd HH:mm:ss")
 	String jsonDatePattern();

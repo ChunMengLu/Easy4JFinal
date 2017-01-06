@@ -83,7 +83,7 @@ public class SqlInXmlPlugin implements IPlugin {
             }
             if (null != ext) {
                 String sql = xmlHelper.getString(ext, "text()");
-                put(sqlKey + "@select", sql);
+                put(sqlKey + "@ext", sql);
             }
         }
     }

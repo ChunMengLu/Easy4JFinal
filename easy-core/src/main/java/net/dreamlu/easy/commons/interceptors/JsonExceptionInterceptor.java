@@ -10,7 +10,7 @@ import com.jfinal.render.Render;
 import net.dreamlu.easy.commons.utils.Exceptions;
 
 /**
- * 对json系统异常时的统一处理
+ * 系统异常时的统一处理
  */
 public class JsonExceptionInterceptor implements Interceptor{
 

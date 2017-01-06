@@ -21,8 +21,10 @@ import com.jfinal.plugin.druid.DruidStatViewHandler;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 
 import net.dreamlu.controller.UeditorApiController;
+import net.dreamlu.easy.commons.interceptors.InjectInterceptor;
 import net.dreamlu.easy.commons.logs.Log4j2LogFactory;
 import net.dreamlu.easy.commons.plugin.event.EventPlugin;
+import net.dreamlu.easy.commons.plugin.ioc.IocPlugin;
 import net.dreamlu.easy.commons.plugin.sqlinxml.SqlInXmlPlugin;
 import net.dreamlu.easy.commons.servlet.ServletContextInterceptor;
 import net.dreamlu.easy.commons.session.SessionHandler;
@@ -40,6 +42,7 @@ public abstract class EasyConfig extends JFinalConfig {
     private static final Easy4JFinal esay = Easy4JFinal.me();
     // 配置文件解析
     private ApplicationConfig cfg;
+    private Routes routes;
     
     @Override
     public void configConstant(Constants me) {
@@ -56,6 +59,7 @@ public abstract class EasyConfig extends JFinalConfig {
 
     @Override
     public void configRoute(Routes me) {
+        routes = me;
         me.add("/captcha", CaptchaController.class);
         me.add("/auth", AuthController.class);
         me.add("/ueditor/api", UeditorApiController.class);
@@ -82,6 +86,7 @@ public abstract class EasyConfig extends JFinalConfig {
 //        me.addGlobalActionInterceptor(new JsonExceptionInterceptor());''
         // ServletContext拦截器，将request, response存储于ThreadLocal中解耦
         me.addGlobalActionInterceptor(new ServletContextInterceptor());
+        me.addGlobalActionInterceptor(new InjectInterceptor());
     }
 
     @Override
@@ -103,13 +108,15 @@ public abstract class EasyConfig extends JFinalConfig {
         me.add(druidPlugin);
         
         // default 配置ActiveRecord插件
-        ActiveRecordPlugin arp = new ActiveRecordPlugin("default", druidPlugin);
+        ActiveRecordPlugin arp = new ActiveRecordPlugin("main", druidPlugin);
         
         _MappingKit.mapping(arp);
         this.mapping(arp);
         
         arp.setShowSql(cfg.devMode());
         me.add(arp);
+        
+        me.add(new IocPlugin(routes, cfg.iocScanPkg()));
         
         // ehcahce插件配置
         me.add(new EhCachePlugin());
