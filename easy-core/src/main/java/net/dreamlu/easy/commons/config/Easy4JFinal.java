@@ -4,12 +4,11 @@ import java.util.Date;
 
 import javax.servlet.ServletContext;
 
-import org.aeonbits.owner.ConfigFactory;
-
 import com.jfinal.core.JFinal;
 import com.jfinal.upload.OreillyCos;
 
 import net.dreamlu.easy.commons.logs.LogPrintStream;
+import net.dreamlu.easy.commons.owner.ConfigFactory;
 import net.dreamlu.easy.commons.session.SessionRepositoryRequestWrapper;
 import net.dreamlu.easy.commons.upload.EasyFileRenamePolicy;
 import net.dreamlu.easy.commons.utils.WebUtils;
