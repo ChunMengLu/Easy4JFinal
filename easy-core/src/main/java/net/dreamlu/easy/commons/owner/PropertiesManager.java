@@ -11,12 +11,10 @@ package net.dreamlu.easy.commons.owner;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import net.dreamlu.easy.commons.owner.Config.LoadPolicy;
 import net.dreamlu.easy.commons.owner.Config.LoadType;
@@ -31,9 +29,6 @@ class PropertiesManager {
     private final Class<? extends Config> clazz;
     private final Map<?, ?>[] imports;
     private final Properties properties;
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private final ReadLock readLock = lock.readLock();
-    private final WriteLock writeLock = lock.writeLock();
 
     private final LoadType loadType;
     private final List<URI> uris;
@@ -79,12 +74,7 @@ class PropertiesManager {
     }
 
     Properties load() {
-        writeLock.lock();
-        try {
-            return load(properties);
-        } finally {
-            writeLock.unlock();
-        }
+        return load(properties);
     }
 
     private Properties load(Properties props) {
@@ -105,12 +95,10 @@ class PropertiesManager {
     }
 
     public String getProperty(String key) {
-        readLock.lock();
-        try {
-            return properties.getProperty(key);
-        } finally {
-            readLock.unlock();
-        }
+        return properties.getProperty(key);
     }
 
+    public Map<Object, Object> getPropMap() {
+        return Collections.unmodifiableMap(properties);
+    }
 }

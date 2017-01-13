@@ -3,6 +3,7 @@ package net.dreamlu.easy.commons.plugin.ioc;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import com.jfinal.aop.Enhancer;
 import com.jfinal.config.Routes;
@@ -24,7 +25,7 @@ import net.dreamlu.easy.commons.searcher.ClassSearcher;
 public class IocPlugin implements IPlugin {
 	private static Log log = Log.getLog(IocPlugin.class);
 	
-	private static final ConcurrentHashMap<String, Object> iocBeanMap = new ConcurrentHashMap<String, Object>();
+	private static final ConcurrentMap<String, Object> iocBeanMap = new ConcurrentHashMap<String, Object>();
 	// 待扫描的包
 	private final Routes routes;
 	private final String[] pkgs;

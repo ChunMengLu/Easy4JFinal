@@ -9,6 +9,7 @@
 package net.dreamlu.easy.commons.owner;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * Converter interface specifies how to convert an input string coming from a property value to a target object returned
@@ -30,6 +31,6 @@ public interface Converter<T> {
      * @return the object of type T converted from the input string.
      * @since 1.0.4
      */
-    T convert(Method method, String input);
+    T convert(Method method, String input, Map<Object, Object> propMap);
 
 }

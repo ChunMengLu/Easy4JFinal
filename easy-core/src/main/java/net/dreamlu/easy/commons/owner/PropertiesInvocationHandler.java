@@ -10,6 +10,7 @@ package net.dreamlu.easy.commons.owner;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import net.sf.cglib.proxy.InvocationHandler;
 
@@ -51,7 +52,10 @@ class PropertiesInvocationHandler implements InvocationHandler, Serializable {
             return null;
         }
         String text = format(method, expandVariables(method, value), args);
-        Object result = Converters.convert(method, method.getReturnType(), text);
+        // TODO L.cm 修改Converter
+        Map<Object, Object> propMap = propertiesManager.getPropMap();
+        
+        Object result = Converters.convert(method, method.getReturnType(), text, propMap);
         if (result == Converters.SpecialValue.NULL) return null;
         return result;
     }

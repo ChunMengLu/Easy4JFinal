@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -37,7 +38,7 @@ enum Converters {
 
     ARRAY {
         @Override
-        Object tryConvert(Method targetMethod, Class<?> targetType, String text) {
+        Object tryConvert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap) {
             if (!targetType.isArray()) return SKIP;
 
             Class<?> type = targetType.getComponentType();
@@ -48,12 +49,12 @@ enum Converters {
             Tokenizer tokenizer = TokenizerResolver.resolveTokenizer(targetMethod);
             String[] chunks = tokenizer.tokens(text);
 
-            Converters converter = doConvert(targetMethod, type, chunks[0]).getConverter();
+            Converters converter = doConvert(targetMethod, type, chunks[0], propMap).getConverter();
             Object result = Array.newInstance(type, chunks.length);
 
             for (int i = 0; i < chunks.length; i++) {
                 String chunk = chunks[i];
-                Object value = converter.tryConvert(targetMethod, type, chunk);
+                Object value = converter.tryConvert(targetMethod, type, chunk, propMap);
                 Array.set(result, i, value);
             }
 
@@ -63,20 +64,20 @@ enum Converters {
 
     COLLECTION {
         @Override
-        Object tryConvert(Method targetMethod, Class<?> targetType, String text) {
+        Object tryConvert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap) {
             if (!Collection.class.isAssignableFrom(targetType)) return SKIP;
 
-            Object[] array = convertToArray(targetMethod, text);
+            Object[] array = convertToArray(targetMethod, text, propMap);
             Collection<Object> collection = Arrays.asList(array);
             Collection<Object> result = instantiateCollection(targetType);
             result.addAll(collection);
             return result;
         }
 
-        private Object[] convertToArray(Method targetMethod, String text) {
+        private Object[] convertToArray(Method targetMethod, String text, Map<Object, Object> propMap) {
             Class<?> type = getGenericType(targetMethod);
             Object stub = Array.newInstance(type, 0);
-            return (Object[]) ARRAY.tryConvert(targetMethod, stub.getClass(), text);
+            return (Object[]) ARRAY.tryConvert(targetMethod, stub.getClass(), text, propMap);
         }
 
         private Class<?> getGenericType(Method targetMethod) {
@@ -117,7 +118,7 @@ enum Converters {
 
     METHOD_WITH_CONVERTER_CLASS_ANNOTATION {
         @Override
-        Object tryConvert(Method targetMethod, Class<?> targetType, String text) {
+        Object tryConvert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap) {
             ConverterClass annotation = targetMethod.getAnnotation(ConverterClass.class);
             if (annotation == null) return SKIP;
 
@@ -133,7 +134,7 @@ enum Converters {
                 throw Util.unsupported(e, "Converter class %s can't be accessed: %s",
                         converterClass.getCanonicalName(), e.getMessage());
             }
-            Object result = converter.convert(targetMethod, text);
+            Object result = converter.convert(targetMethod, text, propMap);
             if (result == null) return NULL;
             return result;
         }
@@ -144,7 +145,7 @@ enum Converters {
      */
     PRIMITIVE {
         @Override
-        Object tryConvert(Method targetMethod, Class<?> targetType, String text) {
+        Object tryConvert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap) {
             if (! targetType.isPrimitive()) return SKIP;
             if (targetType == Byte.TYPE) return Byte.parseByte(text);
             if (targetType == Short.TYPE) return Short.parseShort(text);
@@ -159,7 +160,7 @@ enum Converters {
 
     FILE {
         @Override
-        Object tryConvert(Method targetMethod, Class<?> targetType, String text) {
+        Object tryConvert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap) {
             if (targetType != File.class) return SKIP;
             return new File(Util.expandUserHome(text));
         }
@@ -167,7 +168,7 @@ enum Converters {
 
     CLASS {
         @Override
-        Object tryConvert(Method targetMethod, Class<?> targetType, String text) {
+        Object tryConvert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap) {
             if (targetType != Class.class) return SKIP;
             try {
                 return Class.forName(text);
@@ -179,7 +180,7 @@ enum Converters {
 
     CLASS_WITH_STRING_CONSTRUCTOR {
         @Override
-        Object tryConvert(Method targetMethod, Class<?> targetType, String text) {
+        Object tryConvert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap) {
             try {
                 Constructor<?> constructor = targetType.getConstructor(String.class);
                 return constructor.newInstance(text);
@@ -191,7 +192,7 @@ enum Converters {
 
     CLASS_WITH_VALUE_OF_METHOD {
         @Override
-        Object tryConvert(Method targetMethod, Class<?> targetType, String text) {
+        Object tryConvert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap) {
             try {
                 Method method = targetType.getMethod("valueOf", String.class);
                 if (Modifier.isStatic(method.getModifiers()))
@@ -205,7 +206,7 @@ enum Converters {
 
     CLASS_WITH_OBJECT_CONSTRUCTOR {
         @Override
-        Object tryConvert(Method targetMethod, Class<?> targetType, String text) {
+        Object tryConvert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap) {
             try {
                 Constructor<?> constructor = targetType.getConstructor(Object.class);
                 return constructor.newInstance(text);
@@ -217,20 +218,20 @@ enum Converters {
 
     UNSUPPORTED {
         @Override
-        Object tryConvert(Method targetMethod, Class<?> targetType, String text) {
+        Object tryConvert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap) {
             throw unsupportedConversion(targetType, text);
         }
     };
 
-    abstract Object tryConvert(Method targetMethod, Class<?> targetType, String text);
+    abstract Object tryConvert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap);
 
-    static Object convert(Method targetMethod, Class<?> targetType, String text) {
-        return doConvert(targetMethod, targetType, text).getConvertedValue();
+    static Object convert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap) {
+        return doConvert(targetMethod, targetType, text, propMap).getConvertedValue();
     }
 
-    private static ConversionResult doConvert(Method targetMethod, Class<?> targetType, String text) {
+    private static ConversionResult doConvert(Method targetMethod, Class<?> targetType, String text, Map<Object, Object> propMap) {
         for (Converters converter : values()) {
-            Object convertedValue = converter.tryConvert(targetMethod, targetType, text);
+            Object convertedValue = converter.tryConvert(targetMethod, targetType, text, propMap);
             if (convertedValue != SKIP)
                 return new ConversionResult(converter, convertedValue);
         }
