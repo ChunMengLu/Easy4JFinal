@@ -31,7 +31,7 @@
 		<beetl.version>2.7.5</beetl.version>
 		<druid.version>1.0.27</druid.version>
 		<mysql.version>5.1.40</mysql.version>
-		<fastjson.version>1.2.23</fastjson.version>
+		<fastjson.version>1.2.25.sec10</fastjson.version>
 		<ehcache.version>2.6.11</ehcache.version>
 		<log4j2.version>2.7</log4j2.version>
 		<zxing.version>3.3.0</zxing.version>
